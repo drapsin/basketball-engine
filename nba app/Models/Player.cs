@@ -19,10 +19,10 @@ namespace nba_mvc.Models
         public Guid TeamId { get; set; }
         public Team? Team { get; set; }
         [Range(150, 230, ErrorMessage = "Please enter a valid height")]
-        public string Height { get; set; }
+        public int Height { get; set; }
         [Range(70, 200, ErrorMessage = "Please enter a valid weight")]
-        public string Weight { get; set; }
-        public string Manager { get; set; }
+        public int Weight { get; set; }
+        public string Agent { get; set; }
         public string Sponsor { get; set; }
         public string News { get; set; }
         public string? ImageUrl { get; set; }
