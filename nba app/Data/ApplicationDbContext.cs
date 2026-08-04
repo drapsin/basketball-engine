@@ -18,5 +18,28 @@ namespace nba_mvc.Data
         public DbSet<Referee> Referee { get; set; } = default!;
         public DbSet<Game> Game { get; set; } = default!;
         public DbSet<ActionEvent> ActionEvent { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<ActionEvent>()
+                .HasOne(ae => ae.Game)
+                .WithMany(g => g.ActionEvents)
+                .HasForeignKey(ae => ae.GameId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ActionEvent>()
+                .HasOne(ae => ae.Player)
+                .WithMany()
+                .HasForeignKey(ae => ae.PlayerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ActionEvent>()
+                .HasOne(ae => ae.Team)
+                .WithMany()
+                .HasForeignKey(ae => ae.TeamId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
     }
 }
