@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Data\" />
     <Folder Include="DTO\arena_dto\" />
     <Folder Include="DTO\coach_dto\" />
     <Folder Include="DTO\game_dto\" />

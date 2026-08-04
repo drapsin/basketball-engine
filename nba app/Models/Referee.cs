@@ -11,7 +11,7 @@ namespace nba_mvc.Models
         public string LastName { get; set; }
 
         [Range(0, 100, ErrorMessage = "The value must be positive")]
-        public string Age { get; set; }
+        public int Age { get; set; }
         public string Experience { get; set; }
         public string Licence { get; set; }
         public string? ImageUrl { get; set; }
