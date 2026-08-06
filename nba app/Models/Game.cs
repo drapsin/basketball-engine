@@ -8,7 +8,6 @@ namespace nba_mvc.Models
         public DateTime GameDate { get; set; }
         public string GameName { get; set; }
         public string GameTime { get; set; }
-        public string GameLocation { get; set; }
         public string GameResult { get; set; }
         public string Sponsor { get; set; }
         public Guid HomeTeamId { get; set; }
