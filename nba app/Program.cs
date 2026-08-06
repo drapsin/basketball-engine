@@ -8,6 +8,13 @@ using nba_mvc.Repositories.Game;
 using nba_mvc.Repositories.Player;
 using nba_mvc.Repositories.Referee;
 using nba_mvc.Repositories.Team;
+using nba_mvc.Services.ActionEvent;
+using nba_mvc.Services.Arena;
+using nba_mvc.Services.Coach;
+using nba_mvc.Services.Game;
+using nba_mvc.Services.Player;
+using nba_mvc.Services.Referee;
+using nba_mvc.Services.Team;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +42,15 @@ builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
 builder.Services.AddScoped<IActionEventRepository, ActionEventRepository>();
+
+// Services
+builder.Services.AddScoped<IArenaService, ArenaService>();
+builder.Services.AddScoped<IRefereeService, RefereeService>();
+builder.Services.AddScoped<ICoachService, CoachService>();
+builder.Services.AddScoped<ITeamService, TeamService>();
+builder.Services.AddScoped<IPlayerService, PlayerService>();
+builder.Services.AddScoped<IGameService, GameService>();
+builder.Services.AddScoped<IActionEventService, ActionEventService>();
 
 var app = builder.Build();
 

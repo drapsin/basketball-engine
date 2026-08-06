@@ -10,5 +10,6 @@ namespace nba_mvc.Repositories.Referee
         void Update(Models.Referee referee);
         void Delete(Models.Referee referee);
         Task<bool> SaveChangesAsync();
+        Task<List<Models.Referee>> GetByIdsAsync(IEnumerable<Guid> ids);
     }
 }
