@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using nba_mvc.Data;
+using nba_mvc.Repositories.Arena;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
+
+// Repositories
+builder.Services.AddScoped<IArenaRepository, ArenaRepository>();
 
 var app = builder.Build();
 
