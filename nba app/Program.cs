@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using nba_mvc.Data;
+using nba_mvc.Repositories.ActionEvent;
 using nba_mvc.Repositories.Arena;
 using nba_mvc.Repositories.Coach;
+using nba_mvc.Repositories.Game;
 using nba_mvc.Repositories.Player;
 using nba_mvc.Repositories.Referee;
 using nba_mvc.Repositories.Team;
@@ -31,6 +33,8 @@ builder.Services.AddScoped<IRefereeRepository, RefereeRepository>();
 builder.Services.AddScoped<ICoachRepository, CoachRepository>();
 builder.Services.AddScoped<ITeamRepository, TeamRepository>();
 builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
+builder.Services.AddScoped<IGameRepository, GameRepository>();
+builder.Services.AddScoped<IActionEventRepository, ActionEventRepository>();
 
 var app = builder.Build();
 
