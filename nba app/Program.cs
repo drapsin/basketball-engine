@@ -2,6 +2,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using nba_mvc.Data;
 using nba_mvc.Repositories.Arena;
+using nba_mvc.Repositories.Coach;
+using nba_mvc.Repositories.Player;
+using nba_mvc.Repositories.Referee;
+using nba_mvc.Repositories.Team;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +27,10 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 
 // Repositories
 builder.Services.AddScoped<IArenaRepository, ArenaRepository>();
+builder.Services.AddScoped<IRefereeRepository, RefereeRepository>();
+builder.Services.AddScoped<ICoachRepository, CoachRepository>();
+builder.Services.AddScoped<ITeamRepository, TeamRepository>();
+builder.Services.AddScoped<IPlayerRepository, PlayerRepository>();
 
 var app = builder.Build();
 
