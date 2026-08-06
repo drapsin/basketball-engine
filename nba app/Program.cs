@@ -12,6 +12,7 @@ using nba_mvc.Services.ActionEvent;
 using nba_mvc.Services.Arena;
 using nba_mvc.Services.Coach;
 using nba_mvc.Services.Game;
+using nba_mvc.Services.Image;
 using nba_mvc.Services.Player;
 using nba_mvc.Services.Referee;
 using nba_mvc.Services.Team;
@@ -51,6 +52,20 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IActionEventService, ActionEventService>();
+
+// Images
+builder.Services.AddHttpContextAccessor();
+
+var imageStorage = builder.Configuration["ImageStorage"];
+if (imageStorage == "Cloudinary")
+{
+    builder.Services.AddScoped<ICloudinaryService, CloudinaryService>();
+    builder.Services.AddScoped<IImageUploader, CloudinaryImageUploader>();
+}
+else
+{
+    builder.Services.AddScoped<IImageUploader, LocalImageUploader>();
+}
 
 var app = builder.Build();
 
