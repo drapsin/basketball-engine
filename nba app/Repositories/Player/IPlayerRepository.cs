@@ -11,5 +11,6 @@ namespace nba_mvc.Repositories.Player
         void Update(Models.Player player);
         void Delete(Models.Player player);
         Task<bool> SaveChangesAsync();
+        Task<List<Models.Player>> GetByIdsAsync(IEnumerable<Guid> ids);
     }
 }

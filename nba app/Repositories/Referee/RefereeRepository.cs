@@ -41,5 +41,9 @@ namespace nba_mvc.Repositories.Referee
         {
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<List<Models.Referee>> GetByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.Referee.Where(r => ids.Contains(r.Id)).ToListAsync();
+        }
     }
 }

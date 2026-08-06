@@ -53,5 +53,9 @@ namespace nba_mvc.Repositories.Player
         {
             return await _context.SaveChangesAsync() > 0;
         }
+        public async Task<List<Models.Player>> GetByIdsAsync(IEnumerable<Guid> ids)
+        {
+            return await _context.Player.Where(p => ids.Contains(p.Id)).ToListAsync();
+        }
     }
 }
