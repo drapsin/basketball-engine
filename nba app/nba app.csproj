@@ -27,12 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="DTO\arena_dto\" />
-    <Folder Include="DTO\coach_dto\" />
-    <Folder Include="DTO\game_dto\" />
-    <Folder Include="DTO\team_dto\" />
-    <Folder Include="DTO\referee_dto\" />
-    <Folder Include="DTO\player_dto\" />
   </ItemGroup>
 
 </Project>
