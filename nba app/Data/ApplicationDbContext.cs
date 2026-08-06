@@ -40,6 +40,28 @@ namespace nba_mvc.Data
                 .WithMany()
                 .HasForeignKey(ae => ae.TeamId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.HomeTeam)
+                .WithMany()
+                .HasForeignKey(g => g.HomeTeamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.AwayTeam)
+                .WithMany()
+                .HasForeignKey(g => g.AwayTeamId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Game>()
+                .HasOne(g => g.Arena)
+                .WithMany()
+                .HasForeignKey(g => g.ArenaId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.Referees)
+                .WithMany(r => r.Games);
         }
     }
 }

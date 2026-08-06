@@ -15,5 +15,6 @@ namespace nba_mvc.Models
         public string Experience { get; set; }
         public string Licence { get; set; }
         public string? ImageUrl { get; set; }
+        public ICollection<Game>? Games { get; set; }
     }
 }
