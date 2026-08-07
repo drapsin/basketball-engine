@@ -3,6 +3,7 @@ using nba_mvc.Dtos.Arena;
 using nba_mvc.Dtos.Coach;
 using nba_mvc.Dtos.Game;
 using nba_mvc.Dtos.Player;
+using nba_mvc.Dtos.Referee;
 using nba_mvc.Dtos.Team;
 using nba_mvc.Models;
 
@@ -23,6 +24,11 @@ namespace nba_mvc.Mapping
 
             CreateMap<CoachCreateDto, Coach>();
             CreateMap<CoachUpdateDto, Coach>();
+
+            // Referee
+            CreateMap<Referee, RefereeDto>();
+            CreateMap<RefereeCreateDto, Referee>();
+            CreateMap<RefereeUpdateDto, Referee>();
 
             // Team
             CreateMap<Team, TeamDto>()
