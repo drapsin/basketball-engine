@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using nba_mvc.Dtos.ActionEvent;
 using nba_mvc.Dtos.Arena;
 using nba_mvc.Dtos.Coach;
 using nba_mvc.Dtos.Game;
@@ -17,6 +18,13 @@ namespace nba_mvc.Mapping
             CreateMap<Arena, ArenaDto>();
             CreateMap<ArenaCreateDto, Arena>();
             CreateMap<ArenaUpdateDto, Arena>();
+
+            // ActionEvent
+            CreateMap<Models.ActionEvent, ActionEventDto>()
+                .ForMember(dest => dest.PlayerName, opt => opt.MapFrom(src => src.Player != null ? $"{src.Player.FirstName} {src.Player.LastName}" : string.Empty))
+                .ForMember(dest => dest.TeamName, opt => opt.MapFrom(src => src.Team != null ? src.Team.Name : string.Empty));
+
+            CreateMap<ActionEventCreateDto, Models.ActionEvent>();
 
             // Coach
             CreateMap<Coach, CoachDto>()
