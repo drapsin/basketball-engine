@@ -20,6 +20,6 @@ namespace nba_mvc.Dtos.Coach
 
         public string? ImageUrl { get; set; }
 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace nba_mvc.Dtos.Game
         [Required]
         public string GameTime { get; set; }
 
-        public string GameResult { get; set; }
+        public string? GameResult { get; set; }
         public string Sponsor { get; set; }
 
         [Required]
@@ -28,6 +28,6 @@ namespace nba_mvc.Dtos.Game
         public List<Guid> RefereeIds { get; set; } = new();
         public List<Guid> PlayerIds { get; set; } = new();
 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }

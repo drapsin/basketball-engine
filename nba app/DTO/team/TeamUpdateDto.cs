@@ -27,6 +27,6 @@ namespace nba_mvc.Dtos.Team
 
         public string? ImageUrl { get; set; }
 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }
