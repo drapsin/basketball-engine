@@ -64,8 +64,9 @@ builder.Services.AddScoped<IStandingsService, StandingsService>();
 // Images
 builder.Services.AddHttpContextAccessor();
 
-// Game Simulation with Singleton
+// Game Simulation 
 builder.Services.AddSingleton<IGameSimulationStateStore, GameSimulationStateStore>();
+builder.Services.AddScoped<IGameSimulationEngine, GameSimulationEngine>();
 
 var imageStorage = builder.Configuration["ImageStorage"];
 if (imageStorage == "Cloudinary")
