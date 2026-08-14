@@ -109,5 +109,76 @@ namespace nba_mvc.Services.Stats
             var seconds = totalSeconds % 60;
             return $"{minutes}:{seconds:D2}";
         }
+
+        public async Task<List<PlayByPlayEntryDto>> GetPlayByPlayAsync(Guid gameId)
+        {
+            var game = await _gameRepository.GetByIdAsync(gameId);
+            if (game is null) return new List<PlayByPlayEntryDto>();
+
+            var events = await _actionEventRepository.GetByGameIdAsync(gameId);
+
+            var runningHomeScore = 0;
+            var runningAwayScore = 0;
+            var entries = new List<PlayByPlayEntryDto>();
+
+            foreach (var evt in events)
+            {
+                var points = evt.EventType switch
+                {
+                    EventType.TwoPointShot => 2,
+                    EventType.ThreePointShot => 3,
+                    EventType.FreeThrowMade => 1,
+                    _ => 0
+                };
+
+                if (points > 0)
+                {
+                    if (evt.TeamId == game.HomeTeamId)
+                        runningHomeScore += points;
+                    else if (evt.TeamId == game.AwayTeamId)
+                        runningAwayScore += points;
+                }
+
+                entries.Add(new PlayByPlayEntryDto
+                {
+                    Quarter = evt.Quarter,
+                    GameTime = evt.GameTime,
+                    PlayerName = $"{evt.Player.FirstName} {evt.Player.LastName}",
+                    TeamName = evt.Team.Name,
+                    EventType = evt.EventType,
+                    RunningHomeScore = runningHomeScore,
+                    RunningAwayScore = runningAwayScore
+                });
+            }
+
+            return entries;
+        }
+
+        public async Task<GameStateDto?> GetGameStateAsync(Guid gameId)
+        {
+            var game = await _gameRepository.GetByIdWithDetailsAsync(gameId);
+            if (game is null) return null;
+
+            var boxScore = await GetBoxScoreAsync(gameId);
+            var playByPlay = await GetPlayByPlayAsync(gameId);
+            var lastEvent = playByPlay.LastOrDefault();
+
+            var homeTeamPlayerIds = game.Players
+                .Where(p => p.TeamId == game.HomeTeamId)
+                .Select(p => p.Id)
+                .ToHashSet();
+
+            return new GameStateDto
+            {
+                GameId = game.Id,
+                Quarter = lastEvent?.Quarter ?? 1,
+                GameClock = lastEvent?.GameTime.ToString(@"mm\:ss") ?? "12:00",
+                HomeScore = lastEvent?.RunningHomeScore ?? 0,
+                AwayScore = lastEvent?.RunningAwayScore ?? 0,
+                LastEvent = lastEvent,
+                HomeTeamStats = boxScore.Where(b => homeTeamPlayerIds.Contains(b.PlayerId)).ToList(),
+                AwayTeamStats = boxScore.Where(b => !homeTeamPlayerIds.Contains(b.PlayerId)).ToList()
+            };
+        }
     }
 }

@@ -92,5 +92,20 @@ namespace nba_mvc.Controllers
             var boxScore = await _gameStatsService.GetBoxScoreAsync(id);
             return Ok(boxScore);
         }
+
+        [HttpGet("{id}/playbyplay")]
+        public async Task<ActionResult<List<PlayByPlayEntryDto>>> GetPlayByPlay(Guid id)
+        {
+            var playByPlay = await _gameStatsService.GetPlayByPlayAsync(id);
+            return Ok(playByPlay);
+        }
+
+        [HttpGet("{id}/state")]
+        public async Task<ActionResult<GameStateDto>> GetGameState(Guid id)
+        {
+            var state = await _gameStatsService.GetGameStateAsync(id);
+            if (state is null) return NotFound();
+            return Ok(state);
+        }
     }
 }
