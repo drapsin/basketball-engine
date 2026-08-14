@@ -30,6 +30,6 @@ namespace nba_mvc.Dtos.Player
         public string News { get; set; }
         public string? ImageUrl { get; set; }
 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }

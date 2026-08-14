@@ -13,6 +13,6 @@ namespace nba_mvc.Dtos.Arena
         [Range(1, 100000, ErrorMessage = "Please enter a valid capacity")]
         public int Capacity { get; set; }
 
-        public byte[] RowVersion { get; set; }
+        public byte[]? RowVersion { get; set; }
     }
 }

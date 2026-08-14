@@ -15,6 +15,7 @@ using nba_mvc.Services.Game;
 using nba_mvc.Services.Image;
 using nba_mvc.Services.Player;
 using nba_mvc.Services.Referee;
+using nba_mvc.Services.Stats;
 using nba_mvc.Services.Team;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +56,7 @@ builder.Services.AddScoped<ITeamService, TeamService>();
 builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IActionEventService, ActionEventService>();
+builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 
 // Images
 builder.Services.AddHttpContextAccessor();
