@@ -15,6 +15,7 @@ using nba_mvc.Services.Game;
 using nba_mvc.Services.Image;
 using nba_mvc.Services.Player;
 using nba_mvc.Services.Referee;
+using nba_mvc.Services.Simulation;
 using nba_mvc.Services.Stats;
 using nba_mvc.Services.Team;
 
@@ -62,6 +63,9 @@ builder.Services.AddScoped<IStandingsService, StandingsService>();
 
 // Images
 builder.Services.AddHttpContextAccessor();
+
+// Game Simulation with Singleton
+builder.Services.AddSingleton<IGameSimulationStateStore, GameSimulationStateStore>();
 
 var imageStorage = builder.Configuration["ImageStorage"];
 if (imageStorage == "Cloudinary")
