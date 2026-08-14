@@ -57,6 +57,8 @@ builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IActionEventService, ActionEventService>();
 builder.Services.AddScoped<IGameStatsService, GameStatsService>();
+builder.Services.AddScoped<IGameStatsService, GameStatsService>();
+builder.Services.AddScoped<IStandingsService, StandingsService>();
 
 // Images
 builder.Services.AddHttpContextAccessor();

@@ -107,5 +107,13 @@ namespace nba_mvc.Controllers
             if (state is null) return NotFound();
             return Ok(state);
         }
+
+        [HttpPost("{id}/finish")]
+        public async Task<IActionResult> FinishGame(Guid id)
+        {
+            var success = await _gameService.FinishGameAsync(id);
+            if (!success) return NotFound();
+            return NoContent();
+        }
     }
 }

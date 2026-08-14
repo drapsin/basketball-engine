@@ -11,5 +11,6 @@ namespace nba_mvc.Services.Game
         Task<GameDetailDto?> CreateAsync(GameCreateDto dto);
         Task<bool> UpdateAsync(Guid id, GameUpdateDto dto);
         Task<bool> DeleteAsync(Guid id);
+        Task<bool> FinishGameAsync(Guid id);
     }
 }

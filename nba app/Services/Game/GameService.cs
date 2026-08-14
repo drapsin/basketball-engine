@@ -4,6 +4,7 @@ using nba_mvc.Dtos.Game;
 using nba_mvc.Repositories.Game;
 using nba_mvc.Repositories.Player;
 using nba_mvc.Repositories.Referee;
+using nba_mvc.Services.Stats;
 
 namespace nba_mvc.Services.Game
 {
@@ -13,17 +14,19 @@ namespace nba_mvc.Services.Game
         private readonly IRefereeRepository _refereeRepository;
         private readonly IPlayerRepository _playerRepository;
         private readonly IMapper _mapper;
+        private readonly IGameStatsService _gameStatsService;
 
         public GameService(
             IGameRepository gameRepository,
             IRefereeRepository refereeRepository,
             IPlayerRepository playerRepository,
-            IMapper mapper)
+            IMapper mapper, IGameStatsService gameStatsService)
         {
             _gameRepository = gameRepository;
             _refereeRepository = refereeRepository;
             _playerRepository = playerRepository;
             _mapper = mapper;
+            _gameStatsService = gameStatsService;
         }
 
         public async Task<GameDto?> GetByIdAsync(Guid id)
@@ -103,6 +106,19 @@ namespace nba_mvc.Services.Game
             if (game is null) return false;
 
             _gameRepository.Delete(game);
+            return await _gameRepository.SaveChangesAsync();
+        }
+        public async Task<bool> FinishGameAsync(Guid id)
+        {
+            var game = await _gameRepository.GetByIdAsync(id);
+            if (game is null) return false;
+
+            var state = await _gameStatsService.GetGameStateAsync(id);
+            if (state is null) return false;
+
+            game.GameResult = $"{state.HomeScore}-{state.AwayScore}";
+
+            _gameRepository.Update(game);
             return await _gameRepository.SaveChangesAsync();
         }
     }
