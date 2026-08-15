@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Dtos.Arena;
 using nba_mvc.Services.Arena;
 
@@ -31,6 +32,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ArenaDto>> Create(ArenaCreateDto dto)
         {
             var created = await _arenaService.CreateAsync(dto);
