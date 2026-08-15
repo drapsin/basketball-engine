@@ -67,6 +67,7 @@ builder.Services.AddHttpContextAccessor();
 // Game Simulation 
 builder.Services.AddSingleton<IGameSimulationStateStore, GameSimulationStateStore>();
 builder.Services.AddScoped<IGameSimulationEngine, GameSimulationEngine>();
+builder.Services.AddHostedService<GameSimulationBackgroundService>();
 
 var imageStorage = builder.Configuration["ImageStorage"];
 if (imageStorage == "Cloudinary")
