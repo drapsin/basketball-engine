@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using nba_mvc.Data;
+using nba_mvc.Hubs;
 using nba_mvc.Repositories.ActionEvent;
 using nba_mvc.Repositories.Arena;
 using nba_mvc.Repositories.Coach;
@@ -23,7 +24,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
@@ -58,13 +58,15 @@ builder.Services.AddScoped<IPlayerService, PlayerService>();
 builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IActionEventService, ActionEventService>();
 builder.Services.AddScoped<IGameStatsService, GameStatsService>();
-builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 builder.Services.AddScoped<IStandingsService, StandingsService>();
+
+// SignalR
+builder.Services.AddSignalR();
 
 // Images
 builder.Services.AddHttpContextAccessor();
 
-// Game Simulation 
+// Game Simulation
 builder.Services.AddSingleton<IGameSimulationStateStore, GameSimulationStateStore>();
 builder.Services.AddScoped<IGameSimulationEngine, GameSimulationEngine>();
 builder.Services.AddHostedService<GameSimulationBackgroundService>();
@@ -79,6 +81,17 @@ else
 {
     builder.Services.AddScoped<IImageUploader, LocalImageUploader>();
 }
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalDev", policy =>
+    {
+        policy.SetIsOriginAllowed(_ => true) // permissive for local testing only - tighten before Angular
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
+    });
+});
 
 var app = builder.Build();
 
@@ -101,8 +114,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseCors("AllowLocalDev");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<GameHub>("/hubs/game");
 
 app.Run();
