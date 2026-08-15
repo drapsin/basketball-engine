@@ -29,6 +29,7 @@ namespace nba_mvc.Repositories.Game
                 .Include(g => g.Arena)
                 .Include(g => g.Referees)
                 .Include(g => g.Players)
+                .AsSplitQuery()
                 .FirstOrDefaultAsync(g => g.Id == id);
         }
 
