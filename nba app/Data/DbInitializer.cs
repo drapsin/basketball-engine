@@ -7,7 +7,7 @@ namespace nba_mvc.Data
     {
         public static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            string[] roleNames = { "Admin", "Manager", "Viewer" };
+            string[] roleNames = { "Admin", "Manager" };
             foreach (var role in roleNames)
             {
                 if (!await roleManager.RoleExistsAsync(role))

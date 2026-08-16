@@ -42,8 +42,11 @@ namespace nba_mvc.Services.Stats
                     Assists = playerEvents.Count(e => e.EventType == EventType.Assist),
                     Steals = playerEvents.Count(e => e.EventType == EventType.Steal),
                     Blocks = playerEvents.Count(e => e.EventType == EventType.Block),
-                    Turnovers = playerEvents.Count(e => e.EventType == EventType.Turnover),
-                    PersonalFouls = playerEvents.Count(e => e.EventType == EventType.Foul),
+                    Turnovers = playerEvents.Count(e => e.EventType == EventType.Turnover || e.EventType == EventType.OffensiveFoul),
+                    PersonalFouls = playerEvents.Count(e => e.EventType == EventType.Foul
+                        || e.EventType == EventType.OffensiveFoul
+                        || e.EventType == EventType.TechnicalFoul
+                        || e.EventType == EventType.FlagrantFoul),
 
                     FreeThrows = BuildShootingSplit(playerEvents, EventType.FreeThrowMade, EventType.FreeThrowMiss),
                     TwoPointers = BuildShootingSplit(playerEvents, EventType.TwoPointShot, EventType.TwoPointMiss),

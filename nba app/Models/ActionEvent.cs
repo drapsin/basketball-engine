@@ -29,10 +29,15 @@
         Block,
         Turnover,
         Foul,
+        OffensiveFoul,
+        TechnicalFoul,
+        FlagrantFoul,
         FreeThrowMiss,
         FreeThrowMade,
         SubstituteIn,
         SubstituteOut,
         FoulReceived,
+        Timeout,
+        JumpBallWon
     }
 }

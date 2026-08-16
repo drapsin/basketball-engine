@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace nba_mvc.Models
 {
-    //[Table("Players_Copy")]
     public class Player : BaseId
     {
         [DisplayName("First name")]

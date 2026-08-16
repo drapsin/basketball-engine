@@ -22,7 +22,9 @@ namespace nba_mvc.Services.Simulation
             EventType.Assist,
             EventType.ReboundOff, EventType.ReboundDef, EventType.ReboundDef,
             EventType.Steal, EventType.Block, EventType.Turnover,
-            EventType.Foul, EventType.FreeThrowMade, EventType.FreeThrowMiss
+            EventType.Foul, EventType.OffensiveFoul,
+            EventType.FreeThrowMade, EventType.FreeThrowMiss,
+            EventType.Timeout
         };
 
         public GameSimulationEngine(

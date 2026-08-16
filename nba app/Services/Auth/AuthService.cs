@@ -21,7 +21,7 @@ namespace nba_mvc.Services.Auth
 
         public async Task<AuthResultDto?> RegisterAsync(RegisterDto dto)
         {
-            var validRoles = new[] { "Admin", "Manager", "Viewer" };
+            var validRoles = new[] { "Admin", "Manager"};
             if (!validRoles.Contains(dto.Role)) return null;
 
             var user = new IdentityUser { UserName = dto.Email, Email = dto.Email };
