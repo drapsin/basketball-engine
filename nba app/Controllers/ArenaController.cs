@@ -40,6 +40,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, ArenaUpdateDto dto)
         {
             var success = await _arenaService.UpdateAsync(id, dto);
@@ -48,6 +49,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _arenaService.DeleteAsync(id);

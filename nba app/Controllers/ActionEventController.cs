@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Dtos.ActionEvent;
 using nba_mvc.Services.ActionEvent;
 
@@ -23,6 +24,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<ActionEventDto>> Create(ActionEventCreateDto dto)
         {
             var created = await _actionEventService.CreateAsync(dto);

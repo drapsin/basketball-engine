@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Dtos.Referee;
 using nba_mvc.Services.Referee;
 
@@ -31,6 +32,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<RefereeDto>> Create(RefereeCreateDto dto)
         {
             var created = await _refereeService.CreateAsync(dto);
@@ -38,6 +40,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, RefereeUpdateDto dto)
         {
             var success = await _refereeService.UpdateAsync(id, dto);
@@ -46,6 +49,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _refereeService.DeleteAsync(id);

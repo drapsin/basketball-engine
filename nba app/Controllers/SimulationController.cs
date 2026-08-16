@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Services.Simulation;
 
 namespace nba_mvc.Controllers
@@ -15,6 +16,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost("{gameId}/start")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Start(Guid gameId)
         {
             var started = _stateStore.TryStart(gameId);
@@ -23,6 +25,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost("{gameId}/pause")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Pause(Guid gameId)
         {
             var success = _stateStore.Pause(gameId);
@@ -31,6 +34,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost("{gameId}/resume")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Resume(Guid gameId)
         {
             var success = _stateStore.Resume(gameId);
@@ -39,6 +43,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost("{gameId}/stop")]
+        [Authorize(Roles = "Admin,Manager")]
         public IActionResult Stop(Guid gameId)
         {
             var success = _stateStore.Stop(gameId);

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Dtos.Game;
 using nba_mvc.Dtos.Stats;
 using nba_mvc.Services.Game;
@@ -50,6 +51,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<ActionResult<GameDetailDto>> Create(GameCreateDto dto)
         {
             try
@@ -64,6 +66,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Update(Guid id, GameUpdateDto dto)
         {
             try
@@ -79,6 +82,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _gameService.DeleteAsync(id);
@@ -109,6 +113,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost("{id}/finish")]
+        [Authorize(Roles = "Admin,Manager")]
         public async Task<IActionResult> FinishGame(Guid id)
         {
             var success = await _gameService.FinishGameAsync(id);

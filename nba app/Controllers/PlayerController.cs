@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using nba_mvc.Dtos.Player;
 using nba_mvc.Services.Player;
 
@@ -38,6 +39,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<PlayerDto>> Create(PlayerCreateDto dto)
         {
             var created = await _playerService.CreateAsync(dto);
@@ -45,6 +47,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Update(Guid id, PlayerUpdateDto dto)
         {
             var success = await _playerService.UpdateAsync(id, dto);
@@ -53,6 +56,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var success = await _playerService.DeleteAsync(id);
