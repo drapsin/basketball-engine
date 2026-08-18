@@ -1,0 +1,35 @@
+<div class="arena-form">
+  <h2>{{ isEditMode() ? 'Edit Arena' : 'New Arena' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Name
+      <input type="text" formControlName="arenaName" />
+    </label>
+
+    <label>
+      Location
+      <input type="text" formControlName="arenaLocation" />
+    </label>
+
+    <label>
+      Capacity
+      <input type="number" formControlName="capacity" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Arena' }}
+      </button>
+      <a routerLink="/arenas">Cancel</a>
+    </div>
+  </form>
+</div>

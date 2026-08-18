@@ -1,0 +1,55 @@
+<div class="coach-form">
+  <h2>{{ isEditMode() ? 'Edit Coach' : 'New Coach' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      First Name
+      <input type="text" formControlName="firstName" />
+    </label>
+
+    <label>
+      Last Name
+      <input type="text" formControlName="lastName" />
+    </label>
+
+    <label>
+      Age
+      <input type="number" formControlName="age" />
+    </label>
+
+    <label>
+      Team
+      <select formControlName="teamId">
+        <option value="" disabled>Select a team</option>
+        @for (team of teams(); track team.id) {
+          <option [value]="team.id">{{ team.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      History
+      <textarea formControlName="history" rows="3"></textarea>
+    </label>
+
+    <label>
+      Image URL
+      <input type="text" formControlName="imageUrl" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Coach' }}
+      </button>
+      <a routerLink="/coaches">Cancel</a>
+    </div>
+  </form>
+</div>

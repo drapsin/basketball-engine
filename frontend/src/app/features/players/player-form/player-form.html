@@ -1,0 +1,80 @@
+<div class="player-form">
+  <h2>{{ isEditMode() ? 'Edit Player' : 'New Player' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      First Name
+      <input type="text" formControlName="firstName" />
+    </label>
+
+    <label>
+      Last Name
+      <input type="text" formControlName="lastName" />
+    </label>
+
+    <label>
+      Age
+      <input type="number" formControlName="age" />
+    </label>
+
+    <label>
+      Position
+      <input type="text" formControlName="position" placeholder="e.g. PG, SG, SF, PF, C" />
+    </label>
+
+    <label>
+      Team
+      <select formControlName="teamId">
+        <option value="" disabled>Select a team</option>
+        @for (team of teams(); track team.id) {
+          <option [value]="team.id">{{ team.name }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Height (cm)
+      <input type="number" formControlName="height" />
+    </label>
+
+    <label>
+      Weight (kg)
+      <input type="number" formControlName="weight" />
+    </label>
+
+    <label>
+      Agent
+      <input type="text" formControlName="agent" />
+    </label>
+
+    <label>
+      Sponsor
+      <input type="text" formControlName="sponsor" />
+    </label>
+
+    <label>
+      News
+      <input type="text" formControlName="news" />
+    </label>
+
+    <label>
+      Image URL
+      <input type="text" formControlName="imageUrl" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Player' }}
+      </button>
+      <a routerLink="/players">Cancel</a>
+    </div>
+  </form>
+</div>

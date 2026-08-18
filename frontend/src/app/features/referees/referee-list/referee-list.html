@@ -1,0 +1,54 @@
+<div class="referee-list">
+  <div class="list-header">
+    <h2>Referees</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/referees/new" class="btn-new">+ New Referee</a>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading referees...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (referees().length === 0) {
+      <p>No referees found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Experience</th>
+            <th>Licence</th>
+            <th>Age</th>
+            @if (authService.hasRole('Admin')) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (referee of referees(); track referee.id) {
+            <tr>
+              <td>{{ referee.firstName }} {{ referee.lastName }}</td>
+              <td>{{ referee.experience }}</td>
+              <td>{{ referee.licence }}</td>
+              <td>{{ referee.age }}</td>
+              @if (authService.hasRole('Admin')) {
+                <td class="actions">
+                  <a [routerLink]="['/referees', referee.id, 'edit']">Edit</a>
+                  <button (click)="onDelete(referee)" [disabled]="deletingId() === referee.id">
+                    {{ deletingId() === referee.id ? '...' : 'Delete' }}
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

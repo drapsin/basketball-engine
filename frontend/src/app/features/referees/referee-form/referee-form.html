@@ -1,0 +1,50 @@
+<div class="referee-form">
+  <h2>{{ isEditMode() ? 'Edit Referee' : 'New Referee' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      First Name
+      <input type="text" formControlName="firstName" />
+    </label>
+
+    <label>
+      Last Name
+      <input type="text" formControlName="lastName" />
+    </label>
+
+    <label>
+      Age
+      <input type="number" formControlName="age" />
+    </label>
+
+    <label>
+      Experience
+      <input type="text" formControlName="experience" placeholder="e.g. 12 years" />
+    </label>
+
+    <label>
+      Licence
+      <input type="text" formControlName="licence" />
+    </label>
+
+    <label>
+      Image URL
+      <input type="text" formControlName="imageUrl" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Referee' }}
+      </button>
+      <a routerLink="/referees">Cancel</a>
+    </div>
+  </form>
+</div>

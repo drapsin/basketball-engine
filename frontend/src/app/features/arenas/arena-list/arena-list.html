@@ -1,0 +1,52 @@
+<div class="arena-list">
+  <div class="list-header">
+    <h2>Arenas</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/arenas/new" class="btn-new">+ New Arena</a>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading arenas...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (arenas().length === 0) {
+      <p>No arenas found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Capacity</th>
+            @if (authService.hasRole('Admin')) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (arena of arenas(); track arena.id) {
+            <tr>
+              <td>{{ arena.arenaName }}</td>
+              <td>{{ arena.arenaLocation }}</td>
+              <td>{{ arena.capacity | number }}</td>
+              @if (authService.hasRole('Admin')) {
+                <td class="actions">
+                  <a [routerLink]="['/arenas', arena.id, 'edit']">Edit</a>
+                  <button (click)="onDelete(arena)" [disabled]="deletingId() === arena.id">
+                    {{ deletingId() === arena.id ? '...' : 'Delete' }}
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

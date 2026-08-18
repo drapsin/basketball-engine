@@ -1,0 +1,62 @@
+<div class="player-list">
+  <div class="list-header">
+    <h2>Players</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/players/new" class="btn-new">+ New Player</a>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading players...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (players().length === 0) {
+      <p>No players found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Position</th>
+            <th>Age</th>
+            <th>Height</th>
+            <th>Weight</th>
+            @if (authService.hasRole('Admin')) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (player of players(); track player.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/players', player.id]"
+                  >{{ player.firstName }} {{ player.lastName }}</a
+                >
+              </td>
+              <td>{{ player.teamName }}</td>
+              <td>{{ player.position }}</td>
+              <td>{{ player.age }}</td>
+              <td>{{ player.height }} cm</td>
+              <td>{{ player.weight }} kg</td>
+              @if (authService.hasRole('Admin')) {
+                <td class="actions">
+                  <a [routerLink]="['/players', player.id, 'edit']">Edit</a>
+                  <button (click)="onDelete(player)" [disabled]="deletingId() === player.id">
+                    {{ deletingId() === player.id ? '...' : 'Delete' }}
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

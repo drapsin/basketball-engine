@@ -1,0 +1,52 @@
+<div class="coach-list">
+  <div class="list-header">
+    <h2>Coaches</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/coaches/new" class="btn-new">+ New Coach</a>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading coaches...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (coaches().length === 0) {
+      <p>No coaches found.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Age</th>
+            @if (authService.hasRole('Admin')) {
+              <th>Actions</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+          @for (coach of coaches(); track coach.id) {
+            <tr>
+              <td>{{ coach.firstName }} {{ coach.lastName }}</td>
+              <td>{{ coach.teamName }}</td>
+              <td>{{ coach.age }}</td>
+              @if (authService.hasRole('Admin')) {
+                <td class="actions">
+                  <a [routerLink]="['/coaches', coach.id, 'edit']">Edit</a>
+                  <button (click)="onDelete(coach)" [disabled]="deletingId() === coach.id">
+                    {{ deletingId() === coach.id ? '...' : 'Delete' }}
+                  </button>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>
