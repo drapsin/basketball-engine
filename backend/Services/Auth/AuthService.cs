@@ -42,7 +42,9 @@ namespace nba_mvc.Services.Auth
             if (!validPassword) return null;
 
             var roles = await _userManager.GetRolesAsync(user);
-            var role = roles.FirstOrDefault() ?? "Viewer";
+            var role = roles.FirstOrDefault();
+
+            if (role is null) return null;
 
             return GenerateToken(user, role);
         }
