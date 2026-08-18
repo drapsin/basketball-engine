@@ -1,5 +1,10 @@
 <div class="team-list">
-  <h2>Teams</h2>
+  <div class="list-header">
+    <h2>Teams</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/teams/new" class="btn-new">+ New Team</a>
+    }
+  </div>
 
   @if (loading()) {
     <p>Loading teams...</p>

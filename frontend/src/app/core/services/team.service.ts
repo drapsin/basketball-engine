@@ -31,8 +31,8 @@ export class TeamService {
     return this.http.post<Team>(this.baseUrl, dto);
   }
 
-  update(id: string, dto: TeamUpdate): Observable<Team> {
-    return this.http.put<Team>(`${this.baseUrl}/${id}`, dto);
+  update(id: string, dto: TeamUpdate): Observable<void> {
+    return this.http.put<void>(`${this.baseUrl}/${id}`, dto);
   }
 
   delete(id: string): Observable<void> {

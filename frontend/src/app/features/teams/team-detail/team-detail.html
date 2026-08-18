@@ -24,6 +24,15 @@
       </div>
     </div>
 
+    @if (authService.hasRole('Admin')) {
+      <div class="admin-actions">
+        <a [routerLink]="['/teams', t.id, 'edit']">Edit</a>
+        <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
+          {{ deleting() ? 'Deleting...' : 'Delete Team' }}
+        </button>
+      </div>
+    }
+
     <h3>Roster ({{ t.players.length }})</h3>
 
     @if (t.players.length === 0) {

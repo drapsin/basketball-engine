@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TeamService } from '../../../core/services/team.service';
 import { Team } from '../../../core/models/team.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-team-list',
@@ -16,7 +17,10 @@ export class TeamList implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
 
-  constructor(private teamService: TeamService) {}
+  constructor(
+    private teamService: TeamService,
+    public authService: AuthService,
+  ) {}
 
   ngOnInit(): void {
     this.teamService.getAll().subscribe({

@@ -20,6 +20,27 @@
     }
   }
 
+  .admin-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 1.5rem;
+
+    .btn-delete {
+      background: #c0392b;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   table {
     width: 100%;
     border-collapse: collapse;

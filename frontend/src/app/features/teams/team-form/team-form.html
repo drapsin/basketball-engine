@@ -1,0 +1,88 @@
+<div class="team-form">
+  <h2>{{ isEditMode() ? 'Edit Team' : 'New Team' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Name
+      <input type="text" formControlName="name" />
+    </label>
+
+    <label>
+      City
+      <input type="text" formControlName="city" />
+    </label>
+
+    <label>
+      Arena
+      <select formControlName="arenaId">
+        <option value="" disabled>Select an arena</option>
+        @for (arena of arenas(); track arena.id) {
+          <option [value]="arena.id">{{ arena.arenaName }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Conference
+      <select formControlName="conference">
+        @for (c of conferences; track c) {
+          <option [value]="c">{{ c }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Division
+      <select formControlName="division">
+        @for (d of divisions; track d) {
+          <option [value]="d">{{ d }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Site
+      <input type="text" formControlName="site" />
+    </label>
+
+    <label>
+      Sponsor
+      <input type="text" formControlName="sponsor" />
+    </label>
+
+    <label>
+      News
+      <input type="text" formControlName="news" />
+    </label>
+
+    <label>
+      Ranking
+      <input type="text" formControlName="ranking" />
+    </label>
+
+    <label>
+      Contact
+      <input type="text" formControlName="contact" />
+    </label>
+
+    <label>
+      Image URL
+      <input type="text" formControlName="imageUrl" />
+    </label>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Team' }}
+      </button>
+      <a routerLink="/teams">Cancel</a>
+    </div>
+  </form>
+</div>
