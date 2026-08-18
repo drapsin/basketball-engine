@@ -1,0 +1,32 @@
+<div class="team-list">
+  <h2>Teams</h2>
+
+  @if (loading()) {
+    <p>Loading teams...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (teams().length === 0) {
+      <p>No teams found.</p>
+    } @else {
+      <div class="grid">
+        @for (team of teams(); track team.id) {
+          <a class="card" [routerLink]="['/teams', team.id]">
+            @if (team.imageUrl) {
+              <img [src]="team.imageUrl" [alt]="team.name" />
+            }
+            <h3>{{ team.name }}</h3>
+            <p>{{ team.city }}</p>
+            <p>{{ team.conference }} · {{ team.division }}</p>
+            <p>{{ team.arenaName }}</p>
+            <p>{{ team.playerCount }} players</p>
+          </a>
+        }
+      </div>
+    }
+  }
+</div>

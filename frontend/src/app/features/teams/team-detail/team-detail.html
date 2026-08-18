@@ -1,0 +1,56 @@
+<div class="team-detail">
+  @if (loading()) {
+    <p>Loading team...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (team(); as t) {
+    <a routerLink="/teams" class="back-link">&larr; Back to Teams</a>
+
+    <div class="header">
+      @if (t.imageUrl) {
+        <img [src]="t.imageUrl" [alt]="t.name" />
+      }
+      <div>
+        <h2>{{ t.name }}</h2>
+        <p>{{ t.city }} · {{ t.conference }} · {{ t.division }}</p>
+        <p>{{ t.arenaName }}</p>
+        @if (t.sponsor) {
+          <p>Sponsor: {{ t.sponsor }}</p>
+        }
+      </div>
+    </div>
+
+    <h3>Roster ({{ t.players.length }})</h3>
+
+    @if (t.players.length === 0) {
+      <p>No players on this team yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Age</th>
+            <th>Height</th>
+            <th>Weight</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (player of t.players; track player.id) {
+            <tr>
+              <td>{{ player.firstName }} {{ player.lastName }}</td>
+              <td>{{ player.position }}</td>
+              <td>{{ player.age }}</td>
+              <td>{{ player.height }} cm</td>
+              <td>{{ player.weight }} kg</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

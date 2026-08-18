@@ -1,0 +1,40 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background: #1a1a2e;
+  color: white;
+
+  .brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+    text-decoration: none;
+  }
+
+  .links {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+
+    a {
+      color: #ccc;
+      text-decoration: none;
+
+      &.active {
+        color: white;
+        font-weight: 600;
+      }
+    }
+
+    .user-info {
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    button {
+      cursor: pointer;
+    }
+  }
+}

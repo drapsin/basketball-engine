@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <a routerLink="/" class="brand">NBA Live</a>
+
+  <div class="links">
+    <a routerLink="/teams" routerLinkActive="active">Teams</a>
+
+    @if (authService.isLoggedIn()) {
+      <span class="user-info"
+        >{{ authService.currentAuth()?.email }} ({{ authService.currentRole() }})</span
+      >
+      <button (click)="onLogout()">Logout</button>
+    } @else {
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+      <a routerLink="/register" routerLinkActive="active">Register</a>
+    }
+  </div>
+</nav>
