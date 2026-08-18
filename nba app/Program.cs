@@ -121,12 +121,12 @@ else
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalDev", policy =>
+    options.AddPolicy("AllowAngularDev", policy =>
     {
-        policy.SetIsOriginAllowed(_ => true) // permissive for local testing only - tighten before Angular
+        policy.WithOrigins("http://localhost:4200")
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowCredentials(); 
     });
 });
 
@@ -152,7 +152,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseCors("AllowLocalDev");
+app.UseCors("AllowAngularDev");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
