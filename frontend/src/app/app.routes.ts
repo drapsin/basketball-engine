@@ -18,6 +18,7 @@ import { RefereeForm } from './features/referees/referee-form/referee-form';
 import { GameList } from './features/games/game-list/game-list';
 import { GameDetailComponent } from './features/games/game-detail/game-detail';
 import { GameForm } from './features/games/game-form/game-form';
+import { LiveGame } from './features/live-game/live-game/live-game';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -94,4 +95,5 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['Admin'] },
   },
+  { path: 'games/:id/live', component: LiveGame },
 ];

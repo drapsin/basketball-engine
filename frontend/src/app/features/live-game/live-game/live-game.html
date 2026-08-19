@@ -1,0 +1,156 @@
+<div class="live-game">
+  @if (loading()) {
+    <p>Loading game...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (game(); as g) {
+    <a [routerLink]="['/games', g.id]" class="back-link">&larr; Back to Game</a>
+
+    <div class="matchup-header">
+      <h2>{{ g.awayTeamName }} @ {{ g.homeTeamName }}</h2>
+      <p>{{ g.arenaName }}</p>
+    </div>
+
+    @if (authService.hasRole('Admin') || authService.hasRole('Manager')) {
+      <div class="sim-controls">
+        <span class="sim-status">
+          Simulation:
+          @switch (simState()) {
+            @case ('running') {
+              <strong class="running">Running</strong>
+            }
+            @case ('paused') {
+              <strong class="paused">Paused</strong>
+            }
+            @case ('stopped') {
+              <strong class="stopped">Stopped</strong>
+            }
+            @default {
+              <strong>...</strong>
+            }
+          }
+        </span>
+
+        @if (actionError()) {
+          <span class="action-error">{{ actionError() }}</span>
+        }
+
+        <div class="buttons">
+          @if (simState() === 'stopped' || simState() === 'unknown') {
+            <button (click)="onStart()" [disabled]="actionLoading()">Start</button>
+          }
+          @if (simState() === 'running') {
+            <button (click)="onPause()" [disabled]="actionLoading()">Pause</button>
+            <button (click)="onStop()" [disabled]="actionLoading()" class="btn-stop">Stop</button>
+          }
+          @if (simState() === 'paused') {
+            <button (click)="onResume()" [disabled]="actionLoading()">Resume</button>
+            <button (click)="onStop()" [disabled]="actionLoading()" class="btn-stop">Stop</button>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="connection-badge" [class]="signalrService.connectionState()">
+      {{ signalrService.connectionState() }}
+    </div>
+
+    @if (signalrService.gameState(); as state) {
+      <div class="scoreboard">
+        <div class="score away">
+          <span class="team-name">{{ g.awayTeamName }}</span>
+          <span class="score-value">{{ state.awayScore }}</span>
+        </div>
+        <div class="clock">
+          <span class="quarter">Q{{ state.quarter }}</span>
+          <span class="time">{{ state.gameClock }}</span>
+        </div>
+        <div class="score home">
+          <span class="score-value">{{ state.homeScore }}</span>
+          <span class="team-name">{{ g.homeTeamName }}</span>
+        </div>
+      </div>
+
+      @if (state.lastEvent; as event) {
+        <div class="last-event">
+          <strong>{{ event.playerName }}</strong> ({{ event.teamName }}) · {{ event.eventType }}
+          <span class="event-score"
+            >{{ event.runningAwayScore }} - {{ event.runningHomeScore }}</span
+          >
+        </div>
+      }
+
+      <div class="box-scores">
+        <div class="box-score">
+          <h3>{{ g.awayTeamName }}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Pts</th>
+                <th>Reb</th>
+                <th>Ast</th>
+                <th>Stl</th>
+                <th>Blk</th>
+                <th>TO</th>
+                <th>PF</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of state.awayTeamStats; track p.playerId) {
+                <tr>
+                  <td>{{ p.playerName }}</td>
+                  <td>{{ p.points }}</td>
+                  <td>{{ p.rebounds }}</td>
+                  <td>{{ p.assists }}</td>
+                  <td>{{ p.steals }}</td>
+                  <td>{{ p.blocks }}</td>
+                  <td>{{ p.turnovers }}</td>
+                  <td>{{ p.personalFouls }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="box-score">
+          <h3>{{ g.homeTeamName }}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Player</th>
+                <th>Pts</th>
+                <th>Reb</th>
+                <th>Ast</th>
+                <th>Stl</th>
+                <th>Blk</th>
+                <th>TO</th>
+                <th>PF</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (p of state.homeTeamStats; track p.playerId) {
+                <tr>
+                  <td>{{ p.playerName }}</td>
+                  <td>{{ p.points }}</td>
+                  <td>{{ p.rebounds }}</td>
+                  <td>{{ p.assists }}</td>
+                  <td>{{ p.steals }}</td>
+                  <td>{{ p.blocks }}</td>
+                  <td>{{ p.turnovers }}</td>
+                  <td>{{ p.personalFouls }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    } @else {
+      <p class="waiting">Waiting for live data... start the simulation to see updates here.</p>
+    }
+  }
+</div>
