@@ -62,6 +62,10 @@ namespace nba_mvc.Data
             modelBuilder.Entity<Game>()
                 .HasMany(g => g.Referees)
                 .WithMany(r => r.Games);
+
+            modelBuilder.Entity<Game>()
+                .HasMany(g => g.Players)
+                .WithMany();
         }
     }
 }
