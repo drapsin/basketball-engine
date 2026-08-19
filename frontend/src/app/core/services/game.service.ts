@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Game, GameDetail, GameCreate, GameUpdate } from '../models/game.model';
+import { GameState } from '../models/stats.model';
 
 @Injectable({ providedIn: 'root' })
 export class GameService {
@@ -36,5 +37,9 @@ export class GameService {
 
   delete(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`);
+  }
+
+  getState(id: string): Observable<GameState> {
+    return this.http.get<GameState>(`${this.baseUrl}/${id}/state`);
   }
 }
