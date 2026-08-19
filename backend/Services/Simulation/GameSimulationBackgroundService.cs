@@ -1,4 +1,7 @@
-﻿using nba_mvc.Services.Game;
+﻿using Microsoft.AspNetCore.SignalR;
+using nba_mvc.Hubs;
+using nba_mvc.Services.Game;
+using nba_mvc.Services.Stats;
 
 namespace nba_mvc.Services.Simulation
 {
@@ -38,6 +41,16 @@ namespace nba_mvc.Services.Simulation
                         {
                             await gameService.FinishGameAsync(state.GameId);
                             _stateStore.Stop(state.GameId);
+
+                            var hubContext = scope.ServiceProvider.GetRequiredService<IHubContext<GameHub>>();
+                            var gameStatsService = scope.ServiceProvider.GetRequiredService<IGameStatsService>();
+                            var finalState = await gameStatsService.GetGameStateAsync(state.GameId);
+
+                            if (finalState != null)
+                            {
+                                await hubContext.Clients.Group(state.GameId.ToString())
+                                    .SendAsync("ReceiveGameUpdate", finalState, stoppingToken);
+                            }
                         }
                     }
                     catch (Exception ex)

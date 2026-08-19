@@ -98,7 +98,11 @@ builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 builder.Services.AddScoped<IStandingsService, StandingsService>();
 
 // SignalR
-builder.Services.AddSignalR();
+builder.Services.AddSignalR()
+    .AddJsonProtocol(options =>
+    {
+        options.PayloadSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 // Images
 builder.Services.AddHttpContextAccessor();
