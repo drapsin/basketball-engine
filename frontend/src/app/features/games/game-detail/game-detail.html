@@ -1,0 +1,78 @@
+<div class="game-detail">
+  @if (loading()) {
+    <p>Loading game...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (game(); as g) {
+    <a routerLink="/games" class="back-link">&larr; Back to Games</a>
+
+    <div class="header">
+      <h2>{{ g.awayTeamName }} @ {{ g.homeTeamName }}</h2>
+      <p>{{ g.gameName }}</p>
+      <p>{{ g.gameDate | date: 'fullDate' }} · {{ g.gameTime }}</p>
+      <p>{{ g.arenaName }}</p>
+      @if (g.sponsor) {
+        <p>Sponsor: {{ g.sponsor }}</p>
+      }
+      @if (g.gameResult) {
+        <p class="result">Result: {{ g.gameResult }}</p>
+      } @else {
+        <p class="result upcoming">Not played yet</p>
+      }
+    </div>
+
+    @if (authService.hasRole('Admin')) {
+      <div class="admin-actions">
+        <a [routerLink]="['/games', g.id, 'edit']">Edit</a>
+        <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
+          {{ deleting() ? 'Deleting...' : 'Delete Game' }}
+        </button>
+      </div>
+    }
+
+    <div class="rosters">
+      <div class="roster">
+        <h3>{{ g.awayTeamName }} ({{ awayRoster().length }})</h3>
+        @if (awayRoster().length === 0) {
+          <p>No players assigned.</p>
+        } @else {
+          <ul>
+            @for (player of awayRoster(); track player.id) {
+              <li>{{ player.firstName }} {{ player.lastName }} · {{ player.position }}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="roster">
+        <h3>{{ g.homeTeamName }} ({{ homeRoster().length }})</h3>
+        @if (homeRoster().length === 0) {
+          <p>No players assigned.</p>
+        } @else {
+          <ul>
+            @for (player of homeRoster(); track player.id) {
+              <li>{{ player.firstName }} {{ player.lastName }} · {{ player.position }}</li>
+            }
+          </ul>
+        }
+      </div>
+    </div>
+
+    <div class="referees">
+      <h3>Referees ({{ g.referees.length }})</h3>
+      @if (g.referees.length === 0) {
+        <p>No referees assigned.</p>
+      } @else {
+        <ul>
+          @for (ref of g.referees; track ref.id) {
+            <li>{{ ref.firstName }} {{ ref.lastName }} · {{ ref.licence }}</li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>

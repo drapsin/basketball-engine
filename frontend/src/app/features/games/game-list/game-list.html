@@ -1,0 +1,44 @@
+<div class="game-list">
+  <div class="list-header">
+    <h2>Games</h2>
+    @if (authService.hasRole('Admin')) {
+      <a routerLink="/games/new" class="btn-new">+ New Game</a>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading games...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (games().length === 0) {
+      <p>No games found.</p>
+    } @else {
+      <div class="games">
+        @for (game of games(); track game.id) {
+          <a class="game-card" [routerLink]="['/games', game.id]">
+            <div class="matchup">
+              <span class="team">{{ game.awayTeamName }}</span>
+              <span class="at">@</span>
+              <span class="team">{{ game.homeTeamName }}</span>
+            </div>
+            <div class="meta">
+              <span>{{ game.gameDate | date: 'mediumDate' }}</span>
+              <span>{{ game.gameTime }}</span>
+              <span>{{ game.arenaName }}</span>
+            </div>
+            @if (game.gameResult) {
+              <div class="result">{{ game.gameResult }}</div>
+            } @else {
+              <div class="result upcoming">Not played yet</div>
+            }
+          </a>
+        }
+      </div>
+    }
+  }
+</div>

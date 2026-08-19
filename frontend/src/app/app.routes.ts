@@ -15,6 +15,9 @@ import { CoachList } from './features/coaches/coach-list/coach-list';
 import { CoachForm } from './features/coaches/coach-form/coach-form';
 import { RefereeList } from './features/referees/referee-list/referee-list';
 import { RefereeForm } from './features/referees/referee-form/referee-form';
+import { GameList } from './features/games/game-list/game-list';
+import { GameDetailComponent } from './features/games/game-detail/game-detail';
+import { GameForm } from './features/games/game-form/game-form';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -79,6 +82,15 @@ export const routes: Routes = [
   {
     path: 'referees/:id/edit',
     component: RefereeForm,
+    canActivate: [authGuard],
+    data: { roles: ['Admin'] },
+  },
+  { path: 'games', component: GameList },
+  { path: 'games/new', component: GameForm, canActivate: [authGuard], data: { roles: ['Admin'] } },
+  { path: 'games/:id', component: GameDetailComponent },
+  {
+    path: 'games/:id/edit',
+    component: GameForm,
     canActivate: [authGuard],
     data: { roles: ['Admin'] },
   },

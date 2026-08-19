@@ -1,0 +1,154 @@
+<div class="game-form">
+  <h2>{{ isEditMode() ? 'Edit Game' : 'New Game' }}</h2>
+
+  @if (loading()) {
+    <p>Loading...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <label>
+      Game Name
+      <input type="text" formControlName="gameName" />
+    </label>
+
+    <label>
+      Date
+      <input type="date" formControlName="gameDate" [attr.min]="isEditMode() ? null : todayStr" />
+    </label>
+
+    <label>
+      Time
+      <input type="time" formControlName="gameTime" />
+    </label>
+
+    <label>
+      Arena
+      <select formControlName="arenaId">
+        <option value="" disabled>Select an arena</option>
+        @for (arena of arenas(); track arena.id) {
+          <option [value]="arena.id">{{ arena.arenaName }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Sponsor
+      <input
+        type="text"
+        formControlName="sponsor"
+        list="sponsor-suggestions"
+        placeholder="Type or pick a previous sponsor"
+      />
+      <datalist id="sponsor-suggestions">
+        @for (sponsor of sponsorSuggestions(); track sponsor) {
+          <option [value]="sponsor"></option>
+        }
+      </datalist>
+      @if (sponsorSuggestions().length > 0) {
+        <button type="button" class="clear-suggestions" (click)="clearSponsorSuggestions()">
+          Clear saved sponsors
+        </button>
+      }
+    </label>
+
+    @if (isEditMode()) {
+      <label>
+        Result
+        <input type="text" formControlName="gameResult" placeholder="e.g. 102-98" />
+      </label>
+    }
+
+    <div class="team-pickers">
+      <label>
+        Away Team
+        <select formControlName="awayTeamId">
+          <option value="" disabled>Select a team</option>
+          @for (team of teams(); track team.id) {
+            <option [value]="team.id">{{ team.name }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Home Team
+        <select formControlName="homeTeamId">
+          <option value="" disabled>Select a team</option>
+          @for (team of teams(); track team.id) {
+            <option [value]="team.id">{{ team.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    @if (form.errors?.['sameTeam']) {
+      <p class="error">Home and Away teams must be different.</p>
+    }
+
+    <div class="rosters">
+      <div class="roster-picker">
+        <h4>Away Roster</h4>
+        @if (awayRoster().length === 0) {
+          <p class="hint">Select an away team to see its roster.</p>
+        } @else {
+          @for (player of awayRoster(); track player.id) {
+            <label class="checkbox-row">
+              <input
+                type="checkbox"
+                [checked]="selectedPlayerIds().has(player.id)"
+                (change)="togglePlayer(player.id, $any($event.target).checked)"
+              />
+              {{ player.firstName }} {{ player.lastName }} · {{ player.position }}
+            </label>
+          }
+        }
+      </div>
+
+      <div class="roster-picker">
+        <h4>Home Roster</h4>
+        @if (homeRoster().length === 0) {
+          <p class="hint">Select a home team to see its roster.</p>
+        } @else {
+          @for (player of homeRoster(); track player.id) {
+            <label class="checkbox-row">
+              <input
+                type="checkbox"
+                [checked]="selectedPlayerIds().has(player.id)"
+                (change)="togglePlayer(player.id, $any($event.target).checked)"
+              />
+              {{ player.firstName }} {{ player.lastName }} · {{ player.position }}
+            </label>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="referee-picker">
+      <h4>Referees ({{ selectedRefereeIds().size }}/{{ maxReferees }})</h4>
+      <p class="hint">Select up to {{ maxReferees }} referees.</p>
+      @for (ref of referees(); track ref.id) {
+        <label class="checkbox-row">
+          <input
+            type="checkbox"
+            [checked]="selectedRefereeIds().has(ref.id)"
+            [disabled]="
+              !selectedRefereeIds().has(ref.id) && selectedRefereeIds().size >= maxReferees
+            "
+            (change)="toggleReferee(ref.id, $any($event.target).checked)"
+          />
+          {{ ref.firstName }} {{ ref.lastName }} · {{ ref.licence }}
+        </label>
+      }
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="loading()">
+        {{ isEditMode() ? 'Save Changes' : 'Create Game' }}
+      </button>
+      <a routerLink="/games">Cancel</a>
+    </div>
+  </form>
+</div>
