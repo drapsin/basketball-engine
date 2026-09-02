@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameService } from '../../../core/services/game.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { GameDetail } from '../../../core/models/game.model';
+import { GameState } from '../../../core/models/stats.model';
 
 @Component({
   selector: 'app-game-detail',
@@ -19,6 +20,7 @@ export class GameDetailComponent implements OnInit {
   public authService = inject(AuthService);
 
   game = signal<GameDetail | null>(null);
+  gameState = signal<GameState | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   deleting = signal(false);
@@ -41,6 +43,13 @@ export class GameDetailComponent implements OnInit {
       error: () => {
         this.error.set('Failed to load game.');
         this.loading.set(false);
+      },
+    });
+
+    this.gameService.getState(this.gameId).subscribe({
+      next: (state) => this.gameState.set(state),
+      error: () => {
+        // No stats recorded yet for this game (never started) — fine, just don't show a box score
       },
     });
   }
