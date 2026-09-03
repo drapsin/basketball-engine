@@ -24,7 +24,7 @@ namespace nba_mvc.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin,Manager")]
+        [Authorize(Roles = "Manager")]
         public async Task<ActionResult<ActionEventDto>> Create(ActionEventCreateDto dto)
         {
             var created = await _actionEventService.CreateAsync(dto);
