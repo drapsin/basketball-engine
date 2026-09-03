@@ -8,13 +8,14 @@ import { GameService } from '../../../core/services/game.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { Game } from '../../../core/models/game.model';
 import { GameState } from '../../../core/models/stats.model';
+import { ScoringPanel } from '../scoring-panel/scoring-panel';
 
 type SimState = 'unknown' | 'stopped' | 'running' | 'paused';
 
 @Component({
   selector: 'app-live-game',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ScoringPanel],
   templateUrl: './live-game.html',
   styleUrl: './live-game.scss',
 })
@@ -97,6 +98,10 @@ export class LiveGame implements OnInit, OnDestroy {
   // The state actually shown: prefer live SignalR data once it arrives, fall back to the REST snapshot
   currentState(): GameState | null {
     return this.signalrService.gameState() ?? this.initialState();
+  }
+
+  currentQuarter(): number {
+    return this.currentState()?.quarter ?? 1;
   }
 
   private parseClockToSeconds(clock: string): number {

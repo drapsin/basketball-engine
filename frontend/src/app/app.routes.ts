@@ -20,6 +20,7 @@ import { GameDetailComponent } from './features/games/game-detail/game-detail';
 import { GameForm } from './features/games/game-form/game-form';
 import { LiveGame } from './features/live-game/live-game/live-game';
 import { LeadersList } from './features/leaders/leaders-list/leaders-list';
+import { StandingsList } from './features/standings/standings-list/standings-list';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -98,4 +99,5 @@ export const routes: Routes = [
   },
   { path: 'games/:id/live', component: LiveGame },
   { path: 'leaders', component: LeadersList },
+  { path: 'standings', component: StandingsList },
 ];

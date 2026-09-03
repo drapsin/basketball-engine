@@ -1,0 +1,47 @@
+<div class="scoring-panel">
+  <h3>Scoring Table</h3>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (lastLogged()) {
+    <p class="last-logged">Logged: {{ lastLogged() }}</p>
+  }
+
+  <div class="rosters">
+    <div class="roster-col">
+      <h4>{{ game.awayTeamName }}</h4>
+      @for (player of awayRoster(); track player.id) {
+        <button
+          class="player-btn"
+          [class.selected]="selectedPlayerId() === player.id"
+          (click)="selectPlayer(player)"
+        >
+          {{ player.firstName }} {{ player.lastName }}
+        </button>
+      }
+    </div>
+
+    <div class="roster-col">
+      <h4>{{ game.homeTeamName }}</h4>
+      @for (player of homeRoster(); track player.id) {
+        <button
+          class="player-btn"
+          [class.selected]="selectedPlayerId() === player.id"
+          (click)="selectPlayer(player)"
+        >
+          {{ player.firstName }} {{ player.lastName }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <div class="event-buttons">
+    @for (evt of eventTypes; track evt.value) {
+      <button [disabled]="!selectedPlayerId() || loading()" (click)="logEvent(evt.value)">
+        {{ evt.label }}
+      </button>
+    }
+  </div>
+</div>

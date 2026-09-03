@@ -1,0 +1,65 @@
+<div class="standings-list">
+  <h2>Standings</h2>
+
+  <div class="conference-tabs">
+    <button
+      [class.active]="selectedConference() === 'Eastern'"
+      (click)="onConferenceChange('Eastern')"
+    >
+      Eastern
+    </button>
+    <button
+      [class.active]="selectedConference() === 'Western'"
+      (click)="onConferenceChange('Western')"
+    >
+      Western
+    </button>
+  </div>
+
+  @if (loading()) {
+    <p>Loading standings...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (filteredStandings().length === 0) {
+      <p>No standings data yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>Division</th>
+            <th>W</th>
+            <th>L</th>
+            <th>PCT</th>
+            <th>Streak</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (team of filteredStandings(); track team.teamId) {
+            <tr [class.projected]="team.isProjected">
+              <td>{{ team.conferenceRank }}</td>
+              <td>
+                <a [routerLink]="['/teams', team.teamId]">{{ team.teamName }}</a>
+              </td>
+              <td>{{ team.division }}</td>
+              <td>{{ team.wins }}</td>
+              <td>{{ team.losses }}</td>
+              <td>{{ team.winPercentage | number: '1.3-3' }}</td>
+              <td>{{ team.streak }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      @if (filteredStandings()[0]?.isProjected) {
+        <p class="hint">* Projected standings — not enough games played yet for a full picture.</p>
+      }
+    }
+  }
+</div>

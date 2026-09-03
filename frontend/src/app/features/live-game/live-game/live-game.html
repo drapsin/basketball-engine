@@ -15,7 +15,7 @@
       <p>{{ g.arenaName }}</p>
     </div>
 
-    @if (authService.hasRole('Admin') || authService.hasRole('Manager')) {
+    @if (authService.hasRole('Manager')) {
       <div class="sim-controls">
         <span class="sim-status">
           Simulation:
@@ -150,6 +150,15 @@
           </table>
         </div>
       </div>
+
+      @if (authService.hasRole('Manager') && game(); as g2) {
+        <app-scoring-panel
+          [game]="g2"
+          [currentQuarter]="currentQuarter()"
+          [currentClock]="displayClock()"
+          (eventLogged)="refreshSimStatus()"
+        ></app-scoring-panel>
+      }
     } @else {
       <p class="waiting">Waiting for live data... start the simulation to see updates here.</p>
     }
