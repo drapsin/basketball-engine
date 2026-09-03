@@ -96,6 +96,7 @@ builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<IActionEventService, ActionEventService>();
 builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 builder.Services.AddScoped<IStandingsService, StandingsService>();
+builder.Services.AddScoped<IPlayerStatsService, PlayerStatsService>();
 
 // SignalR
 builder.Services.AddSignalR()
