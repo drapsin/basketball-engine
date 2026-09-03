@@ -38,5 +38,67 @@
         </button>
       </div>
     }
+
+    @if (careerStats(); as stats) {
+      <h3>Career Stats ({{ stats.gamesPlayed }} games)</h3>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>PPG</th>
+            <th>RPG</th>
+            <th>APG</th>
+            <th>SPG</th>
+            <th>BPG</th>
+            <th>TPG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Per Game</td>
+            <td>{{ stats.pointsPerGame }}</td>
+            <td>{{ stats.reboundsPerGame }}</td>
+            <td>{{ stats.assistsPerGame }}</td>
+            <td>{{ stats.stealsPerGame }}</td>
+            <td>{{ stats.blocksPerGame }}</td>
+            <td>{{ stats.turnoversPerGame }}</td>
+          </tr>
+          <tr>
+            <td>Total</td>
+            <td>{{ stats.totalPoints }}</td>
+            <td>{{ stats.totalRebounds }}</td>
+            <td>{{ stats.totalAssists }}</td>
+            <td>{{ stats.totalSteals }}</td>
+            <td>{{ stats.totalBlocks }}</td>
+            <td>{{ stats.totalTurnovers }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="shooting-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>FG (2PT)</th>
+            <th>3PT</th>
+            <th>FT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Made/Att</td>
+            <td>{{ stats.twoPointers.made }}/{{ stats.twoPointers.attempted }}</td>
+            <td>{{ stats.threePointers.made }}/{{ stats.threePointers.attempted }}</td>
+            <td>{{ stats.freeThrows.made }}/{{ stats.freeThrows.attempted }}</td>
+          </tr>
+          <tr>
+            <td>%</td>
+            <td>{{ stats.twoPointers.percentage }}%</td>
+            <td>{{ stats.threePointers.percentage }}%</td>
+            <td>{{ stats.freeThrows.percentage }}%</td>
+          </tr>
+        </tbody>
+      </table>
+    }
   }
 </div>

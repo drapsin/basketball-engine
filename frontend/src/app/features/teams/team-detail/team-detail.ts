@@ -2,8 +2,10 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { TeamService } from '../../../core/services/team.service';
+import { PlayerStatsService } from '../../../core/services/player-stats.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { TeamDetail } from '../../../core/models/team.model';
+import { TeamCareerStats } from '../../../core/models/player-stats.model';
 
 @Component({
   selector: 'app-team-detail',
@@ -16,9 +18,11 @@ export class TeamDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private teamService = inject(TeamService);
+  private playerStatsService = inject(PlayerStatsService);
   public authService = inject(AuthService);
 
   team = signal<TeamDetail | null>(null);
+  teamStats = signal<TeamCareerStats | null>(null);
   loading = signal(true);
   error = signal<string | null>(null);
   deleting = signal(false);
@@ -41,6 +45,13 @@ export class TeamDetailComponent implements OnInit {
       error: () => {
         this.error.set('Failed to load team.');
         this.loading.set(false);
+      },
+    });
+
+    this.playerStatsService.getTeamCareer(this.teamId).subscribe({
+      next: (stats) => this.teamStats.set(stats),
+      error: () => {
+        // No games played yet — fine, just don't show a stats section
       },
     });
   }

@@ -1,0 +1,53 @@
+<div class="leaders-list">
+  <h2>League Leaders</h2>
+
+  <div class="category-tabs">
+    @for (cat of categories; track cat.value) {
+      <button
+        [class.active]="selectedCategory() === cat.value"
+        (click)="onCategoryChange(cat.value)"
+      >
+        {{ cat.label }}
+      </button>
+    }
+  </div>
+
+  @if (loading()) {
+    <p>Loading leaders...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (leaders().length === 0) {
+      <p>No stats recorded yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Player</th>
+            <th>Team</th>
+            <th>GP</th>
+            <th>{{ categories.find(c => c.value === selectedCategory())?.label }}/G</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (leader of leaders(); track leader.playerId; let i = $index) {
+            <tr>
+              <td>{{ i + 1 }}</td>
+              <td>
+                <a [routerLink]="['/players', leader.playerId]">{{ leader.playerName }}</a>
+              </td>
+              <td>{{ leader.teamName }}</td>
+              <td>{{ leader.gamesPlayed }}</td>
+              <td>{{ leader.value }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  }
+</div>

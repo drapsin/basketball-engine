@@ -19,6 +19,7 @@ import { GameList } from './features/games/game-list/game-list';
 import { GameDetailComponent } from './features/games/game-detail/game-detail';
 import { GameForm } from './features/games/game-form/game-form';
 import { LiveGame } from './features/live-game/live-game/live-game';
+import { LeadersList } from './features/leaders/leaders-list/leaders-list';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -96,4 +97,5 @@ export const routes: Routes = [
     data: { roles: ['Admin'] },
   },
   { path: 'games/:id/live', component: LiveGame },
+  { path: 'leaders', component: LeadersList },
 ];

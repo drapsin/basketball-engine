@@ -1,59 +1,19 @@
-.team-detail {
-  padding: 1.5rem;
+.stats-table,
+.player-stats-table {
+  width: 100%;
+  max-width: 500px;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
 
-  .back-link {
-    display: inline-block;
-    margin-bottom: 1rem;
+  th,
+  td {
+    text-align: left;
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid #eee;
   }
 
-  .header {
-    display: flex;
-    gap: 1.5rem;
-    align-items: center;
-    margin-bottom: 2rem;
-
-    img {
-      width: 100px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-  }
-
-  .admin-actions {
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 1.5rem;
-
-    .btn-delete {
-      background: #c0392b;
-      color: white;
-      border: none;
-      padding: 0.4rem 0.9rem;
-      border-radius: 4px;
-      cursor: pointer;
-
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
-    }
-  }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-
-    th,
-    td {
-      text-align: left;
-      padding: 0.5rem 0.75rem;
-      border-bottom: 1px solid #eee;
-    }
-  }
-
-  .error {
-    color: #c0392b;
+  th {
+    color: #666;
+    font-size: 0.85rem;
   }
 }

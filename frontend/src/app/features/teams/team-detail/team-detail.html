@@ -33,6 +33,56 @@
       </div>
     }
 
+    @if (teamStats(); as stats) {
+      <h3>Team Stats ({{ stats.gamesPlayed }} games)</h3>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>PPG</th>
+            <th>RPG</th>
+            <th>APG</th>
+            <th>SPG</th>
+            <th>BPG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{ stats.pointsPerGame }}</td>
+            <td>{{ stats.reboundsPerGame }}</td>
+            <td>{{ stats.assistsPerGame }}</td>
+            <td>{{ stats.stealsPerGame }}</td>
+            <td>{{ stats.blocksPerGame }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>Player Leaders on This Team</h4>
+      <table class="player-stats-table">
+        <thead>
+          <tr>
+            <th>Player</th>
+            <th>GP</th>
+            <th>PPG</th>
+            <th>RPG</th>
+            <th>APG</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (p of stats.players; track p.playerId) {
+            <tr>
+              <td>
+                <a [routerLink]="['/players', p.playerId]">{{ p.playerName }}</a>
+              </td>
+              <td>{{ p.gamesPlayed }}</td>
+              <td>{{ p.pointsPerGame }}</td>
+              <td>{{ p.reboundsPerGame }}</td>
+              <td>{{ p.assistsPerGame }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+
     <h3>Roster ({{ t.players.length }})</h3>
 
     @if (t.players.length === 0) {
