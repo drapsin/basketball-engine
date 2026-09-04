@@ -9,19 +9,22 @@ namespace nba_mvc.Controllers
     public class SimulationController : ControllerBase
     {
         private readonly IGameSimulationStateStore _stateStore;
+        private readonly IGameSimulationEngine _engine;
 
-        public SimulationController(IGameSimulationStateStore stateStore)
+        public SimulationController(IGameSimulationStateStore stateStore, IGameSimulationEngine engine)
         {
             _stateStore = stateStore;
+            _engine = engine;
         }
 
         [HttpPost("{gameId}/start")]
         [Authorize(Roles = "Admin,Manager")]
         public IActionResult Start(Guid gameId)
         {
-            var started = _stateStore.TryStart(gameId);
+            var isAutomatic = User.IsInRole("Admin");
+            var started = _stateStore.TryStart(gameId, isAutomatic);
             if (!started) return Conflict(new { message = "Simulation already running for this game." });
-            return Ok(new { message = "Simulation started." });
+            return Ok(new { message = "Simulation started.", automatic = isAutomatic });
         }
 
         [HttpPost("{gameId}/pause")]
@@ -57,6 +60,27 @@ namespace nba_mvc.Controllers
             var state = _stateStore.Get(gameId);
             if (state is null) return NotFound(new { message = "No active simulation for this game." });
             return Ok(state);
+        }
+
+        [HttpGet("active")]
+        public IActionResult GetActiveGames()
+        {
+            var states = _stateStore.GetAllStates();
+            return Ok(states);
+        }
+
+        [HttpPost("{gameId}/instant")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> SimulateInstant(Guid gameId)
+        {
+            if (_stateStore.Get(gameId) != null)
+                return Conflict(new { message = "This game is currently live. Stop it before simulating instantly." });
+
+            var success = await _engine.SimulateInstantAsync(gameId);
+            if (!success)
+                return BadRequest(new { message = "Could not simulate — game not found, has no players assigned, or is already finished." });
+
+            return Ok(new { message = "Game simulated instantly." });
         }
     }
 }

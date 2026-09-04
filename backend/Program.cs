@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using nba_mvc.Data;
 using nba_mvc.Hubs;
+using nba_mvc.Models;
 using nba_mvc.Repositories.ActionEvent;
 using nba_mvc.Repositories.Arena;
 using nba_mvc.Repositories.Coach;
@@ -49,7 +50,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
@@ -143,6 +144,9 @@ using (var scope = app.Services.CreateScope())
 
     var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
     await DbInitializer.SeedRoles(roleManager);
+
+    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+    await DbInitializer.SeedAdminUser(userManager);
 
     var context = services.GetRequiredService<ApplicationDbContext>();
     DbInitializer.SeedData(context);

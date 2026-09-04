@@ -137,5 +137,41 @@ namespace nba_mvc.Data
                 context.SaveChanges();
             }
         }
+        public static async Task SeedAdminUser(UserManager<ApplicationUser> userManager)
+        {
+            const string adminEmail = "admin@nba.com";
+            const string adminPassword = "Admin123!";
+
+            var existing = await userManager.FindByEmailAsync(adminEmail);
+
+            if (existing != null)
+            {
+                if (existing.ApprovalStatus != ApprovalStatus.Approved)
+                {
+                    existing.ApprovalStatus = ApprovalStatus.Approved;
+                    await userManager.UpdateAsync(existing);
+                }
+
+                if (!await userManager.IsInRoleAsync(existing, "Admin"))
+                {
+                    await userManager.AddToRoleAsync(existing, "Admin");
+                }
+
+                return;
+            }
+
+            var admin = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                ApprovalStatus = ApprovalStatus.Approved
+            };
+
+            var result = await userManager.CreateAsync(admin, adminPassword);
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(admin, "Admin");
+            }
+        }
     }
 }

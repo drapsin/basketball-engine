@@ -3,5 +3,6 @@
     public interface IGameSimulationEngine
     {
         Task AdvanceAsync(Guid gameId, GameSimulationState state);
+        Task<bool> SimulateInstantAsync(Guid gameId);
     }
 }

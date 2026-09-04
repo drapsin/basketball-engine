@@ -6,9 +6,9 @@ namespace nba_mvc.Services.Simulation
     {
         private readonly ConcurrentDictionary<Guid, GameSimulationState> _activeGames = new();
 
-        public bool TryStart(Guid gameId)
+        public bool TryStart(Guid gameId, bool isAutomatic)
         {
-            return _activeGames.TryAdd(gameId, new GameSimulationState { GameId = gameId });
+            return _activeGames.TryAdd(gameId, new GameSimulationState { GameId = gameId, IsAutomatic = isAutomatic });
         }
 
         public bool Pause(Guid gameId)
@@ -44,6 +44,11 @@ namespace nba_mvc.Services.Simulation
         public IEnumerable<GameSimulationState> GetAllActive()
         {
             return _activeGames.Values.Where(s => !s.IsPaused);
+        }
+
+        public IEnumerable<GameSimulationState> GetAllStates()
+        {
+            return _activeGames.Values;
         }
     }
 }
