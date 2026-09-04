@@ -6,7 +6,11 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  role: 'Admin' | 'Manager';
+  role: 'Manager';
+}
+
+export interface RegisterResponse {
+  message: string;
 }
 
 export interface AuthResult {

@@ -33,9 +33,13 @@ export class Login {
       },
       error: (err) => {
         this.loading.set(false);
-        this.errorMessage.set(
-          err.status === 401 ? 'Invalid email or password.' : 'Something went wrong.',
-        );
+        if (err.status === 403) {
+          this.errorMessage.set(err.error?.message ?? 'Your account is not yet active.');
+        } else {
+          this.errorMessage.set(
+            err.status === 401 ? 'Invalid email or password.' : 'Something went wrong.',
+          );
+        }
       },
     });
   }

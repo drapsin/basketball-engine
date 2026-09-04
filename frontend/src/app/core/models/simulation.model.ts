@@ -1,6 +1,7 @@
 export interface SimulationStatus {
   gameId: string;
   isPaused: boolean;
+  isAutomatic: boolean;
   quarter: number;
-  gameClock: string; // "hh:mm:ss"
+  gameClock: string;
 }

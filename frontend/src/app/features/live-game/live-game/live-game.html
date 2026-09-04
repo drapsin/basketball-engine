@@ -15,7 +15,7 @@
       <p>{{ g.arenaName }}</p>
     </div>
 
-    @if (authService.hasRole('Manager')) {
+    @if (authService.hasRole('Admin') || authService.hasRole('Manager')) {
       <div class="sim-controls">
         <span class="sim-status">
           Simulation:

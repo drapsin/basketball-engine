@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameService } from '../../../core/services/game.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { SimulationService } from '../../../core/services/simulation.service';
 import { GameDetail } from '../../../core/models/game.model';
 import { GameState } from '../../../core/models/stats.model';
 
@@ -17,6 +18,7 @@ export class GameDetailComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private gameService = inject(GameService);
+  private simulationService = inject(SimulationService);
   public authService = inject(AuthService);
 
   game = signal<GameDetail | null>(null);
@@ -24,6 +26,8 @@ export class GameDetailComponent implements OnInit {
   loading = signal(true);
   error = signal<string | null>(null);
   deleting = signal(false);
+  simulating = signal(false);
+  simulateError = signal<string | null>(null);
 
   private gameId: string | null = null;
 
@@ -80,6 +84,27 @@ export class GameDetailComponent implements OnInit {
       error: () => {
         this.deleting.set(false);
         this.error.set('Failed to delete game.');
+      },
+    });
+  }
+
+  onSimulateInstant(): void {
+    if (!this.gameId) return;
+
+    const confirmed = window.confirm('Instantly simulate this entire game? This cannot be undone.');
+    if (!confirmed) return;
+
+    this.simulateError.set(null);
+    this.simulating.set(true);
+
+    this.simulationService.simulateInstant(this.gameId).subscribe({
+      next: () => {
+        this.simulating.set(false);
+        this.ngOnInit();
+      },
+      error: (err) => {
+        this.simulating.set(false);
+        this.simulateError.set(err.error?.message ?? 'Failed to simulate game.');
       },
     });
   }

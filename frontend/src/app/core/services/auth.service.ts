@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthResult, LoginRequest, RegisterRequest } from '../models/auth.model';
+import { AuthResult, LoginRequest, RegisterRequest, RegisterResponse } from '../models/auth.model';
 
 const TOKEN_KEY = 'nba_auth';
 
@@ -26,10 +26,8 @@ export class AuthService {
       .pipe(tap((result) => this.setAuth(result)));
   }
 
-  register(request: RegisterRequest): Observable<AuthResult> {
-    return this.http
-      .post<AuthResult>(`${environment.apiUrl}/Auth/register`, request)
-      .pipe(tap((result) => this.setAuth(result)));
+  register(request: RegisterRequest): Observable<RegisterResponse> {
+    return this.http.post<RegisterResponse>(`${environment.apiUrl}/Auth/register`, request);
   }
 
   logout(): void {

@@ -1,5 +1,6 @@
 <div class="register-container">
-  <h2>Register</h2>
+  <h2>Register as Manager</h2>
+  <p class="hint">Your account will need approval from an administrator before you can log in.</p>
 
   <form (ngSubmit)="onSubmit()">
     <label>
@@ -12,20 +13,16 @@
       <input type="password" name="password" [(ngModel)]="password" required />
     </label>
 
-    <label>
-      Role
-      <select name="role" [(ngModel)]="role">
-        <option value="Manager">Manager</option>
-        <option value="Admin">Admin</option>
-      </select>
-    </label>
-
     @if (errorMessage()) {
       <p class="error">{{ errorMessage() }}</p>
     }
 
+    @if (successMessage()) {
+      <p class="success">{{ successMessage() }}</p>
+    }
+
     <button type="submit" [disabled]="loading()">
-      {{ loading() ? 'Registering...' : 'Register' }}
+      {{ loading() ? 'Submitting...' : 'Register' }}
     </button>
   </form>
 </div>

@@ -1,0 +1,43 @@
+<div class="live-games-list">
+  <h2>Live Games</h2>
+
+  @if (loading()) {
+    <p>Loading live games...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (!loading() && !error()) {
+    @if (rows().length === 0) {
+      <p>No games are currently live.</p>
+    } @else {
+      <div class="games">
+        @for (row of rows(); track row.status.gameId) {
+          @if (row.game; as g) {
+            <a class="game-card" [routerLink]="['/games', g.id, 'live']">
+              <div class="matchup">
+                <span class="team">{{ g.awayTeamName }}</span>
+                <span class="at">@</span>
+                <span class="team">{{ g.homeTeamName }}</span>
+              </div>
+              <div class="meta">
+                <span>Q{{ row.status.quarter }}</span>
+                <span>{{ row.status.gameClock }}</span>
+                @if (row.status.isPaused) {
+                  <span class="badge paused">Paused</span>
+                } @else {
+                  <span class="badge live">Live</span>
+                }
+                @if (row.status.isAutomatic) {
+                  <span class="badge demo">Automatic (Demo)</span>
+                }
+              </div>
+            </a>
+          }
+        }
+      </div>
+    }
+  }
+</div>

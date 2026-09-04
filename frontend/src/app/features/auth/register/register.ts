@@ -1,7 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -14,34 +13,30 @@ import { AuthService } from '../../../core/services/auth.service';
 export class Register {
   email = '';
   password = '';
-  role: 'Admin' | 'Manager' = 'Manager';
 
   errorMessage = signal<string | null>(null);
+  successMessage = signal<string | null>(null);
   loading = signal(false);
 
-  constructor(
-    private authService: AuthService,
-    private router: Router,
-  ) {}
+  constructor(private authService: AuthService) {}
 
   onSubmit(): void {
     this.errorMessage.set(null);
+    this.successMessage.set(null);
     this.loading.set(true);
 
     this.authService
-      .register({ email: this.email, password: this.password, role: this.role })
+      .register({ email: this.email, password: this.password, role: 'Manager' })
       .subscribe({
-        next: () => {
+        next: (response) => {
           this.loading.set(false);
-          this.router.navigate(['/']);
+          this.successMessage.set(response.message);
+          this.email = '';
+          this.password = '';
         },
         error: (err) => {
           this.loading.set(false);
-          this.errorMessage.set(
-            err.status === 400
-              ? 'Registration failed. Check your email/password/role.'
-              : 'Something went wrong.',
-          );
+          this.errorMessage.set(err.error?.message ?? 'Registration failed.');
         },
       });
   }

@@ -29,4 +29,12 @@ export class SimulationService {
   getStatus(gameId: string): Observable<SimulationStatus> {
     return this.http.get<SimulationStatus>(`${this.baseUrl}/${gameId}/status`);
   }
+
+  getActiveGames(): Observable<SimulationStatus[]> {
+    return this.http.get<SimulationStatus[]>(`${this.baseUrl}/active`);
+  }
+
+  simulateInstant(gameId: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/${gameId}/instant`, {});
+  }
 }

@@ -31,6 +31,12 @@
         <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
           {{ deleting() ? 'Deleting...' : 'Delete Game' }}
         </button>
+        <button (click)="onSimulateInstant()" [disabled]="simulating() || !!t.gameResult">
+          {{ simulating() ? 'Simulating...' : 'Simulate Instantly' }}
+        </button>
+        @if (simulateError()) {
+          <span class="error">{{ simulateError() }}</span>
+        }
       </div>
     }
 
