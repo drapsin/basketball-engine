@@ -35,6 +35,18 @@ namespace nba_mvc.Services.Player
             return _mapper.Map<IEnumerable<PlayerDto>>(players);
         }
 
+        public async Task<(IEnumerable<PlayerDto> Items, int TotalCount)> GetPagedAsync(
+            string? search,
+            Guid? teamId,
+            string? position,
+            int page,
+            int pageSize)
+        {
+            var (players, totalCount) = await _repository.GetPagedAsync(search, teamId, position, page, pageSize);
+            var items = _mapper.Map<IEnumerable<PlayerDto>>(players);
+            return (items, totalCount);
+        }
+
         public async Task<PlayerDto> CreateAsync(PlayerCreateDto dto)
         {
             var player = _mapper.Map<Models.Player>(dto);

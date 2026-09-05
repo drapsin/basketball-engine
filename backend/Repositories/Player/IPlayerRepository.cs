@@ -12,5 +12,11 @@ namespace nba_mvc.Repositories.Player
         void Delete(Models.Player player);
         Task<bool> SaveChangesAsync();
         Task<List<Models.Player>> GetByIdsAsync(IEnumerable<Guid> ids);
+        Task<(List<Models.Player> Items, int TotalCount)> GetPagedAsync(
+            string? search,
+            Guid? teamId,
+            string? position,
+            int page,
+            int pageSize);
     }
 }

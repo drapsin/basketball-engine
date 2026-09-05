@@ -34,6 +34,45 @@ namespace nba_mvc.Repositories.Player
                 .ToListAsync();
         }
 
+        public async Task<(List<Models.Player> Items, int TotalCount)> GetPagedAsync(
+            string? search,
+            Guid? teamId,
+            string? position,
+            int page,
+            int pageSize)
+        {
+            var query = _context.Player.Include(p => p.Team).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var term = search.Trim().ToLower();
+                query = query.Where(p =>
+                    p.FirstName.ToLower().Contains(term) ||
+                    p.LastName.ToLower().Contains(term));
+            }
+
+            if (teamId.HasValue)
+            {
+                query = query.Where(p => p.TeamId == teamId.Value);
+            }
+
+            if (!string.IsNullOrWhiteSpace(position))
+            {
+                query = query.Where(p => p.Position == position);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(p => p.LastName)
+                .ThenBy(p => p.FirstName)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
+
         public async Task AddAsync(Models.Player player)
         {
             await _context.Player.AddAsync(player);
@@ -53,6 +92,7 @@ namespace nba_mvc.Repositories.Player
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
         public async Task<List<Models.Player>> GetByIdsAsync(IEnumerable<Guid> ids)
         {
             return await _context.Player.Where(p => ids.Contains(p.Id)).ToListAsync();

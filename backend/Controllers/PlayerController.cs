@@ -63,5 +63,18 @@ namespace nba_mvc.Controllers
             if (!success) return NotFound();
             return NoContent();
         }
+        
+        [HttpGet("paged")]
+        public async Task<ActionResult<IEnumerable<PlayerDto>>> GetPaged(
+            [FromQuery] string? search,
+            [FromQuery] Guid? teamId,
+            [FromQuery] string? position,
+            [FromQuery] int page = 1,
+            [FromQuery] int pageSize = 25)
+        {
+            var (items, totalCount) = await _playerService.GetPagedAsync(search, teamId, position, page, pageSize);
+            Response.Headers.Append("X-Total-Count", totalCount.ToString());
+            return Ok(items);
+        }
     }
 }

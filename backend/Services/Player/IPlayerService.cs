@@ -10,5 +10,11 @@ namespace nba_mvc.Services.Player
         Task<PlayerDto> CreateAsync(PlayerCreateDto dto);
         Task<bool> UpdateAsync(Guid id, PlayerUpdateDto dto);
         Task<bool> DeleteAsync(Guid id);
+        Task<(IEnumerable<PlayerDto> Items, int TotalCount)> GetPagedAsync(
+            string? search,
+            Guid? teamId,
+            string? position,
+            int page,
+            int pageSize);
     }
 }
