@@ -1,19 +1,23 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using nba_mvc.Dtos.Team;
+using nba_mvc.Dtos.Coach;
 using nba_mvc.Models;
 using nba_mvc.Repositories.Team;
+using nba_mvc.Repositories.Coach;
 
 namespace nba_mvc.Services.Team
 {
     public class TeamService : ITeamService
     {
         private readonly ITeamRepository _repository;
+        private readonly ICoachRepository _coachRepository;
         private readonly IMapper _mapper;
 
-        public TeamService(ITeamRepository repository, IMapper mapper)
+        public TeamService(ITeamRepository repository, ICoachRepository coachRepository, IMapper mapper)
         {
             _repository = repository;
+            _coachRepository = coachRepository;
             _mapper = mapper;
         }
 
@@ -26,7 +30,14 @@ namespace nba_mvc.Services.Team
         public async Task<TeamDetailDto?> GetDetailByIdAsync(Guid id)
         {
             var team = await _repository.GetByIdWithPlayersAsync(id);
-            return team is null ? null : _mapper.Map<TeamDetailDto>(team);
+            if (team is null) return null;
+
+            var detail = _mapper.Map<TeamDetailDto>(team);
+
+            var coach = await _coachRepository.GetByTeamIdAsync(id);
+            detail.Coach = coach is null ? null : _mapper.Map<CoachDto>(coach);
+
+            return detail;
         }
 
         public async Task<IEnumerable<TeamDto>> GetAllAsync()

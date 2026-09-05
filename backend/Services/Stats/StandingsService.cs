@@ -34,7 +34,7 @@ namespace nba_mvc.Services.Stats
 
                 var wins = 0;
                 var losses = 0;
-                var resultsChronological = new List<bool>(); 
+                var resultsChronological = new List<bool>();
 
                 foreach (var game in teamGames)
                 {
@@ -68,19 +68,27 @@ namespace nba_mvc.Services.Stats
 
             foreach (var conferenceGroup in standings.GroupBy(s => s.Conference))
             {
-                var ranked = conferenceGroup.OrderByDescending(s => s.WinPercentage).ToList();
+                var ranked = OrderWithTiebreakers(conferenceGroup).ToList();
                 for (int i = 0; i < ranked.Count; i++)
                     ranked[i].ConferenceRank = i + 1;
             }
 
             foreach (var divisionGroup in standings.GroupBy(s => s.Division))
             {
-                var ranked = divisionGroup.OrderByDescending(s => s.WinPercentage).ToList();
+                var ranked = OrderWithTiebreakers(divisionGroup).ToList();
                 for (int i = 0; i < ranked.Count; i++)
                     ranked[i].DivisionRank = i + 1;
             }
 
-            return standings.OrderBy(s => s.ConferenceRank).ToList();
+            return OrderWithTiebreakers(standings).ToList();
+        }
+
+        private static IOrderedEnumerable<TeamStandingDto> OrderWithTiebreakers(IEnumerable<TeamStandingDto> teams)
+        {
+            return teams
+                .OrderByDescending(s => s.WinPercentage)
+                .ThenByDescending(s => s.Wins)
+                .ThenBy(s => s.TeamName);
         }
 
         private static string CalculateStreak(List<bool> resultsChronological)

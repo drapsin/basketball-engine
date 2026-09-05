@@ -7,6 +7,8 @@ namespace nba_mvc.Services.Stats
 {
     public class GameStatsService : IGameStatsService
     {
+        private const int QuarterLengthSeconds = 720; // 12-minute quarters
+
         private readonly IGameRepository _gameRepository;
         private readonly IActionEventRepository _actionEventRepository;
 
@@ -23,6 +25,8 @@ namespace nba_mvc.Services.Stats
 
             var events = (await _actionEventRepository.GetByGameIdAsync(gameId)).ToList();
 
+            var finalQuarter = events.Count == 0 ? 4 : events.Max(e => e.Quarter);
+
             var boxScores = new List<PlayerBoxScoreDto>();
 
             foreach (var player in game.Players)
@@ -34,7 +38,7 @@ namespace nba_mvc.Services.Stats
                     PlayerId = player.Id,
                     PlayerName = $"{player.FirstName} {player.LastName}",
                     Position = player.Position,
-                    MinutesPlayed = CalculateMinutesPlayed(playerEvents),
+                    MinutesPlayed = CalculateMinutesPlayed(playerEvents, finalQuarter),
 
                     Points = CalculatePoints(playerEvents),
                     OffensiveRebounds = playerEvents.Count(e => e.EventType == EventType.ReboundOff),
@@ -82,30 +86,45 @@ namespace nba_mvc.Services.Stats
             };
         }
 
-        private static string CalculateMinutesPlayed(List<Models.ActionEvent> playerEvents)
+        private static int ElapsedSeconds(Models.ActionEvent evt)
+        {
+            var elapsedInQuarter = QuarterLengthSeconds - (int)evt.GameTime.TotalSeconds;
+            return (evt.Quarter - 1) * QuarterLengthSeconds + elapsedInQuarter;
+        }
+
+        private static string CalculateMinutesPlayed(List<Models.ActionEvent> playerEvents, int finalQuarter)
         {
             var subEvents = playerEvents
                 .Where(e => e.EventType == EventType.SubstituteIn || e.EventType == EventType.SubstituteOut)
-                .OrderBy(e => e.Quarter)
-                .ThenByDescending(e => e.GameTime)
+                .OrderBy(ElapsedSeconds)
                 .ToList();
 
             var totalSeconds = 0;
-            DateTime? inTime = null;
+            int? inElapsed = null;
 
             foreach (var evt in subEvents)
             {
+                var elapsed = ElapsedSeconds(evt);
+
                 if (evt.EventType == EventType.SubstituteIn)
                 {
-                    inTime = DateTime.MinValue.Add(evt.GameTime);
+                    inElapsed = elapsed;
                 }
-                else if (evt.EventType == EventType.SubstituteOut && inTime.HasValue)
+                else if (evt.EventType == EventType.SubstituteOut && inElapsed.HasValue)
                 {
-                    var outTime = DateTime.MinValue.Add(evt.GameTime);
-                    var diff = (inTime.Value - outTime).TotalSeconds;
-                    if (diff > 0) totalSeconds += (int)diff;
-                    inTime = null;
+                    var diff = elapsed - inElapsed.Value;
+                    if (diff > 0) totalSeconds += diff;
+                    inElapsed = null;
                 }
+            }
+
+            // Player was subbed in but never subbed back out (e.g. finished the game on court) —
+            // count them through to the end of the last quarter actually played, instead of dropping the stint.
+            if (inElapsed.HasValue)
+            {
+                var gameEndElapsed = finalQuarter * QuarterLengthSeconds;
+                var diff = gameEndElapsed - inElapsed.Value;
+                if (diff > 0) totalSeconds += diff;
             }
 
             var minutes = totalSeconds / 60;
@@ -183,7 +202,5 @@ namespace nba_mvc.Services.Stats
                 AwayTeamStats = boxScore.Where(b => !homeTeamPlayerIds.Contains(b.PlayerId)).ToList()
             };
         }
-
-
     }
 }
