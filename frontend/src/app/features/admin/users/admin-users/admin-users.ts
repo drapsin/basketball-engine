@@ -1,7 +1,8 @@
-import { Component, OnInit, computed, signal } from '@angular/core';
+import { Component, OnInit, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminUserService } from '../../../../core/services/admin-user.service';
+import { ConfirmDialogService } from '../../../../shared/confirm-dialog/confirm-dialog.service';
 import { UserSummary } from '../../../../core/models/user-summary.model';
 
 @Component({
@@ -11,6 +12,10 @@ import { UserSummary } from '../../../../core/models/user-summary.model';
   templateUrl: './admin-users.html',
 })
 export class AdminUsers implements OnInit {
+  private adminUserService = inject(AdminUserService);
+  private confirmDialog = inject(ConfirmDialogService);
+  private fb = inject(FormBuilder);
+
   users = signal<UserSummary[]>([]);
   loading = signal(true);
   errorMessage = signal<string | null>(null);
@@ -24,10 +29,7 @@ export class AdminUsers implements OnInit {
   createAdminError = signal<string | null>(null);
   createAdminSuccess = signal<string | null>(null);
 
-  constructor(
-    private adminUserService: AdminUserService,
-    private fb: FormBuilder,
-  ) {
+  constructor() {
     this.createAdminForm = this.fb.nonNullable.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
@@ -85,20 +87,23 @@ export class AdminUsers implements OnInit {
     if (user.isSeededAdmin) {
       return;
     }
-    if (!window.confirm(`Delete user ${user.email}? This cannot be undone.`)) {
-      return;
-    }
-    this.actionInProgressId.set(user.id);
-    this.adminUserService.deleteUser(user.id).subscribe({
-      next: () => {
-        this.actionInProgressId.set(null);
-        this.loadUsers();
-      },
-      error: () => {
-        this.actionInProgressId.set(null);
-        this.errorMessage.set(`Failed to delete ${user.email}.`);
-      },
-    });
+    this.confirmDialog
+      .confirm(`Delete user ${user.email}? This cannot be undone.`, 'Delete User')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.actionInProgressId.set(user.id);
+        this.adminUserService.deleteUser(user.id).subscribe({
+          next: () => {
+            this.actionInProgressId.set(null);
+            this.loadUsers();
+          },
+          error: () => {
+            this.actionInProgressId.set(null);
+            this.errorMessage.set(`Failed to delete ${user.email}.`);
+          },
+        });
+      });
   }
 
   submitCreateAdmin(): void {

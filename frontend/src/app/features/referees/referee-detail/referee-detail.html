@@ -1,0 +1,34 @@
+<div class="referee-detail">
+  @if (loading()) {
+    <p>Loading referee...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (referee(); as r) {
+    <a routerLink="/referees" class="back-link">&larr; Back to Referees</a>
+
+    <div class="header">
+      @if (r.imageUrl) {
+        <img [src]="r.imageUrl" [alt]="r.firstName + ' ' + r.lastName" />
+      }
+      <div>
+        <h2>{{ r.firstName }} {{ r.lastName }}</h2>
+        <p>Age: {{ r.age }}</p>
+        <p>Experience: {{ r.experience }}</p>
+        <p>Licence: {{ r.licence }}</p>
+      </div>
+    </div>
+
+    @if (authService.hasRole('Admin')) {
+      <div class="admin-actions">
+        <a [routerLink]="['/referees', r.id, 'edit']">Edit</a>
+        <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
+          {{ deleting() ? 'Deleting...' : 'Delete Referee' }}
+        </button>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,30 @@
+<div class="arena-detail">
+  @if (loading()) {
+    <p>Loading arena...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (arena(); as a) {
+    <a routerLink="/arenas" class="back-link">&larr; Back to Arenas</a>
+
+    <div class="header">
+      <div>
+        <h2>{{ a.arenaName }}</h2>
+        <p>{{ a.arenaLocation }}</p>
+        <p>Capacity: {{ a.capacity | number }}</p>
+      </div>
+    </div>
+
+    @if (authService.hasRole('Admin')) {
+      <div class="admin-actions">
+        <a [routerLink]="['/arenas', a.id, 'edit']">Edit</a>
+        <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
+          {{ deleting() ? 'Deleting...' : 'Delete Arena' }}
+        </button>
+      </div>
+    }
+  }
+</div>

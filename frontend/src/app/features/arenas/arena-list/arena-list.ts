@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ArenaService } from '../../../core/services/arena.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { Arena } from '../../../core/models/arena.model';
 
 @Component({
@@ -14,6 +15,7 @@ import { Arena } from '../../../core/models/arena.model';
 })
 export class ArenaList implements OnInit {
   private arenaService = inject(ArenaService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   arenas = signal<Arena[]>([]);
@@ -40,19 +42,22 @@ export class ArenaList implements OnInit {
   }
 
   onDelete(arena: Arena): void {
-    const confirmed = window.confirm(`Delete ${arena.arenaName}?`);
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm(`Delete ${arena.arenaName}?`, 'Delete Arena')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.deletingId.set(arena.id);
-    this.arenaService.delete(arena.id).subscribe({
-      next: () => {
-        this.arenas.update((list) => list.filter((a) => a.id !== arena.id));
-        this.deletingId.set(null);
-      },
-      error: () => {
-        this.error.set('Failed to delete arena — it may be in use by a team.');
-        this.deletingId.set(null);
-      },
-    });
+        this.deletingId.set(arena.id);
+        this.arenaService.delete(arena.id).subscribe({
+          next: () => {
+            this.arenas.update((list) => list.filter((a) => a.id !== arena.id));
+            this.deletingId.set(null);
+          },
+          error: () => {
+            this.error.set('Failed to delete arena — it may be in use by a team.');
+            this.deletingId.set(null);
+          },
+        });
+      });
   }
 }

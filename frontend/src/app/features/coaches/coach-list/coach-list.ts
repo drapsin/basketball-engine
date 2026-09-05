@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { CoachService } from '../../../core/services/coach.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { Coach } from '../../../core/models/coach.model';
 
 @Component({
@@ -14,6 +15,7 @@ import { Coach } from '../../../core/models/coach.model';
 })
 export class CoachList implements OnInit {
   private coachService = inject(CoachService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   coaches = signal<Coach[]>([]);
@@ -40,19 +42,22 @@ export class CoachList implements OnInit {
   }
 
   onDelete(coach: Coach): void {
-    const confirmed = window.confirm(`Delete ${coach.firstName} ${coach.lastName}?`);
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm(`Delete ${coach.firstName} ${coach.lastName}?`, 'Delete Coach')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.deletingId.set(coach.id);
-    this.coachService.delete(coach.id).subscribe({
-      next: () => {
-        this.coaches.update((list) => list.filter((c) => c.id !== coach.id));
-        this.deletingId.set(null);
-      },
-      error: () => {
-        this.error.set('Failed to delete coach.');
-        this.deletingId.set(null);
-      },
-    });
+        this.deletingId.set(coach.id);
+        this.coachService.delete(coach.id).subscribe({
+          next: () => {
+            this.coaches.update((list) => list.filter((c) => c.id !== coach.id));
+            this.deletingId.set(null);
+          },
+          error: () => {
+            this.error.set('Failed to delete coach.');
+            this.deletingId.set(null);
+          },
+        });
+      });
   }
 }

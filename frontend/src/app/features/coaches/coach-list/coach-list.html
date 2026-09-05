@@ -32,7 +32,11 @@
         <tbody>
           @for (coach of coaches(); track coach.id) {
             <tr>
-              <td>{{ coach.firstName }} {{ coach.lastName }}</td>
+              <td>
+                <a [routerLink]="['/coaches', coach.id]"
+                  >{{ coach.firstName }} {{ coach.lastName }}</a
+                >
+              </td>
               <td>{{ coach.teamName }}</td>
               <td>{{ coach.age }}</td>
               @if (authService.hasRole('Admin')) {

@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { PlayerService } from '../../../core/services/player.service';
 import { TeamService } from '../../../core/services/team.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { Player } from '../../../core/models/player.model';
 import { Team } from '../../../core/models/team.model';
 
@@ -20,6 +21,7 @@ const PAGE_SIZE = 25;
 export class PlayerList implements OnInit, OnDestroy {
   private playerService = inject(PlayerService);
   private teamService = inject(TeamService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   players = signal<Player[]>([]);
@@ -47,7 +49,7 @@ export class PlayerList implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.teamService.getAll().subscribe({
       next: (teams) => this.teams.set(teams),
-      error: () => {}, // filter dropdown just stays empty if this fails; not critical
+      error: () => {},
     });
     this.load();
   }
@@ -94,19 +96,22 @@ export class PlayerList implements OnInit, OnDestroy {
   }
 
   onDelete(player: Player): void {
-    const confirmed = window.confirm(`Delete ${player.firstName} ${player.lastName}?`);
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm(`Delete ${player.firstName} ${player.lastName}?`, 'Delete Player')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.deletingId.set(player.id);
-    this.playerService.delete(player.id).subscribe({
-      next: () => {
-        this.deletingId.set(null);
-        this.load();
-      },
-      error: () => {
-        this.error.set('Failed to delete player.');
-        this.deletingId.set(null);
-      },
-    });
+        this.deletingId.set(player.id);
+        this.playerService.delete(player.id).subscribe({
+          next: () => {
+            this.deletingId.set(null);
+            this.load();
+          },
+          error: () => {
+            this.error.set('Failed to delete player.');
+            this.deletingId.set(null);
+          },
+        });
+      });
   }
 }

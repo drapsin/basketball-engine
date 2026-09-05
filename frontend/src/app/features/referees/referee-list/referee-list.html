@@ -33,7 +33,11 @@
         <tbody>
           @for (referee of referees(); track referee.id) {
             <tr>
-              <td>{{ referee.firstName }} {{ referee.lastName }}</td>
+              <td>
+                <a [routerLink]="['/referees', referee.id]"
+                  >{{ referee.firstName }} {{ referee.lastName }}</a
+                >
+              </td>
               <td>{{ referee.experience }}</td>
               <td>{{ referee.licence }}</td>
               <td>{{ referee.age }}</td>

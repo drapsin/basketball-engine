@@ -32,7 +32,9 @@
         <tbody>
           @for (arena of arenas(); track arena.id) {
             <tr>
-              <td>{{ arena.arenaName }}</td>
+              <td>
+                <a [routerLink]="['/arenas', arena.id]">{{ arena.arenaName }}</a>
+              </td>
               <td>{{ arena.arenaLocation }}</td>
               <td>{{ arena.capacity | number }}</td>
               @if (authService.hasRole('Admin')) {

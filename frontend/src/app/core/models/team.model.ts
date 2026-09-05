@@ -19,8 +19,18 @@ export interface Team {
   createdAt: string;
 }
 
+export interface TeamCoach {
+  id: string;
+  firstName: string;
+  lastName: string;
+  age: number;
+  history: string;
+  imageUrl: string | null;
+}
+
 export interface TeamDetail extends Team {
   players: Player[];
+  coach: TeamCoach | null;
 }
 
 export interface TeamCreate {

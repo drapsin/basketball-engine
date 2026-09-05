@@ -33,6 +33,31 @@
       </div>
     }
 
+    @if (t.coach) {
+      <div class="coach-section">
+        <h3>Head Coach</h3>
+        <div class="coach-card">
+          @if (t.coach.imageUrl) {
+            <img [src]="t.coach.imageUrl" [alt]="t.coach.firstName + ' ' + t.coach.lastName" />
+          }
+          <div>
+            <p>
+              <strong>{{ t.coach.firstName }} {{ t.coach.lastName }}</strong>
+            </p>
+            <p>Age: {{ t.coach.age }}</p>
+            @if (t.coach.history) {
+              <p>{{ t.coach.history }}</p>
+            }
+          </div>
+        </div>
+      </div>
+    } @else {
+      <div class="coach-section">
+        <h3>Head Coach</h3>
+        <p>No coach assigned.</p>
+      </div>
+    }
+
     @if (teamStats(); as stats) {
       <h3>Team Stats ({{ stats.gamesPlayed }} games)</h3>
       <table class="stats-table">

@@ -16,9 +16,13 @@
         <button
           class="player-btn"
           [class.selected]="selectedPlayerId() === player.id"
+          [class.on-court]="isOnCourt(player.id)"
           (click)="selectPlayer(player)"
         >
           {{ player.firstName }} {{ player.lastName }}
+          @if (isOnCourt(player.id)) {
+            <span class="on-court-dot" title="On court">●</span>
+          }
         </button>
       }
     </div>
@@ -29,12 +33,30 @@
         <button
           class="player-btn"
           [class.selected]="selectedPlayerId() === player.id"
+          [class.on-court]="isOnCourt(player.id)"
           (click)="selectPlayer(player)"
         >
           {{ player.firstName }} {{ player.lastName }}
+          @if (isOnCourt(player.id)) {
+            <span class="on-court-dot" title="On court">●</span>
+          }
         </button>
       }
     </div>
+  </div>
+
+  <div class="substitution-control">
+    <button
+      class="btn-substitute"
+      [disabled]="!selectedPlayerId() || loading()"
+      (click)="logSubstitution()"
+    >
+      @if (isSelectedOnCourt()) {
+        Sub Out
+      } @else {
+        Sub In
+      }
+    </button>
   </div>
 
   <div class="event-buttons">

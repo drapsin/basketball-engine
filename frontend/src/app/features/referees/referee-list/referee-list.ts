@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { RefereeService } from '../../../core/services/referee.service';
 import { AuthService } from '../../../core/services/auth.service';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { Referee } from '../../../core/models/referee.model';
 
 @Component({
@@ -14,6 +15,7 @@ import { Referee } from '../../../core/models/referee.model';
 })
 export class RefereeList implements OnInit {
   private refereeService = inject(RefereeService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   referees = signal<Referee[]>([]);
@@ -40,19 +42,22 @@ export class RefereeList implements OnInit {
   }
 
   onDelete(referee: Referee): void {
-    const confirmed = window.confirm(`Delete ${referee.firstName} ${referee.lastName}?`);
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm(`Delete ${referee.firstName} ${referee.lastName}?`, 'Delete Referee')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.deletingId.set(referee.id);
-    this.refereeService.delete(referee.id).subscribe({
-      next: () => {
-        this.referees.update((list) => list.filter((r) => r.id !== referee.id));
-        this.deletingId.set(null);
-      },
-      error: () => {
-        this.error.set('Failed to delete referee.');
-        this.deletingId.set(null);
-      },
-    });
+        this.deletingId.set(referee.id);
+        this.refereeService.delete(referee.id).subscribe({
+          next: () => {
+            this.referees.update((list) => list.filter((r) => r.id !== referee.id));
+            this.deletingId.set(null);
+          },
+          error: () => {
+            this.error.set('Failed to delete referee.');
+            this.deletingId.set(null);
+          },
+        });
+      });
   }
 }

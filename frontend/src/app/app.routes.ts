@@ -23,6 +23,9 @@ import { LeadersList } from './features/leaders/leaders-list/leaders-list';
 import { StandingsList } from './features/standings/standings-list/standings-list';
 import { LiveGamesList } from './features/live-game/live-games-list/live-games-list';
 import { AdminUsers } from './features/admin/users/admin-users/admin-users';
+import { CoachDetail } from './features/coaches/coach-detail/coach-detail';
+import { RefereeDetail } from './features/referees/referee-detail/referee-detail';
+import { ArenaDetail } from './features/arenas/arena-detail/arena-detail';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -58,6 +61,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['Admin'] },
   },
+  { path: 'arenas/:id', component: ArenaDetail },
   {
     path: 'arenas/:id/edit',
     component: ArenaForm,
@@ -71,6 +75,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['Admin'] },
   },
+  { path: 'coaches/:id', component: CoachDetail },
   {
     path: 'coaches/:id/edit',
     component: CoachForm,
@@ -84,6 +89,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: { roles: ['Admin'] },
   },
+  { path: 'referees/:id', component: RefereeDetail },
   {
     path: 'referees/:id/edit',
     component: RefereeForm,
@@ -103,5 +109,10 @@ export const routes: Routes = [
   { path: 'leaders', component: LeadersList },
   { path: 'standings', component: StandingsList },
   { path: 'live-games', component: LiveGamesList },
-  { path: 'admin/users', component: AdminUsers },
+  {
+    path: 'admin/users',
+    component: AdminUsers,
+    canActivate: [authGuard],
+    data: { roles: ['Admin'] },
+  },
 ];

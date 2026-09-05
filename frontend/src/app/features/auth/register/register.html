@@ -2,15 +2,21 @@
   <h2>Register as Manager</h2>
   <p class="hint">Your account will need approval from an administrator before you can log in.</p>
 
-  <form (ngSubmit)="onSubmit()">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <label>
       Email
-      <input type="email" name="email" [(ngModel)]="email" required />
+      <input type="email" formControlName="email" />
+      @if (registerForm.controls.email.invalid && registerForm.controls.email.touched) {
+        <span class="field-error">Please enter a valid email.</span>
+      }
     </label>
 
     <label>
       Password
-      <input type="password" name="password" [(ngModel)]="password" required />
+      <input type="password" formControlName="password" />
+      @if (registerForm.controls.password.invalid && registerForm.controls.password.touched) {
+        <span class="field-error">Password must be at least 6 characters.</span>
+      }
     </label>
 
     @if (errorMessage()) {

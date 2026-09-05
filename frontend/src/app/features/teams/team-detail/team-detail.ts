@@ -6,6 +6,7 @@ import { PlayerStatsService } from '../../../core/services/player-stats.service'
 import { AuthService } from '../../../core/services/auth.service';
 import { TeamDetail } from '../../../core/models/team.model';
 import { TeamCareerStats } from '../../../core/models/player-stats.model';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 
 @Component({
   selector: 'app-team-detail',
@@ -19,6 +20,7 @@ export class TeamDetailComponent implements OnInit {
   private router = inject(Router);
   private teamService = inject(TeamService);
   private playerStatsService = inject(PlayerStatsService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   team = signal<TeamDetail | null>(null);
@@ -50,9 +52,7 @@ export class TeamDetailComponent implements OnInit {
 
     this.playerStatsService.getTeamCareer(this.teamId).subscribe({
       next: (stats) => this.teamStats.set(stats),
-      error: () => {
-        // No games played yet — fine, just don't show a stats section
-      },
+      error: () => {},
     });
   }
 
@@ -60,22 +60,25 @@ export class TeamDetailComponent implements OnInit {
     if (!this.teamId) return;
 
     const teamName = this.team()?.name ?? 'this team';
-    const confirmed = window.confirm(`Delete ${teamName}? This cannot be undone.`);
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm(`Delete ${teamName}? This cannot be undone.`, 'Delete Team')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.deleting.set(true);
-    this.teamService.delete(this.teamId).subscribe({
-      next: () => {
-        this.router.navigate(['/teams']);
-      },
-      error: (err) => {
-        this.deleting.set(false);
-        this.error.set(
-          err.status === 400
-            ? 'Cannot delete this team — it may have related data (players, games) blocking deletion.'
-            : 'Failed to delete team.',
-        );
-      },
-    });
+        this.deleting.set(true);
+        this.teamService.delete(this.teamId!).subscribe({
+          next: () => {
+            this.router.navigate(['/teams']);
+          },
+          error: (err) => {
+            this.deleting.set(false);
+            this.error.set(
+              err.status === 400
+                ? 'Cannot delete this team — it may have related data (players, games) blocking deletion.'
+                : 'Failed to delete team.',
+            );
+          },
+        });
+      });
   }
 }

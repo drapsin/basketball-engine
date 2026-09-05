@@ -66,3 +66,26 @@
     }
   }
 }
+.on-court-dot {
+  color: #2e7d32;
+  margin-left: 6px;
+  font-size: 10px;
+}
+
+.substitution-control {
+  margin: 12px 0;
+
+  .btn-substitute {
+    padding: 8px 20px;
+    background: #1565c0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+}

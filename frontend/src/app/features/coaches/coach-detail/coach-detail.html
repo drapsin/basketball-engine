@@ -1,0 +1,38 @@
+<div class="coach-detail">
+  @if (loading()) {
+    <p>Loading coach...</p>
+  }
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  @if (coach(); as c) {
+    <a routerLink="/coaches" class="back-link">&larr; Back to Coaches</a>
+
+    <div class="header">
+      @if (c.imageUrl) {
+        <img [src]="c.imageUrl" [alt]="c.firstName + ' ' + c.lastName" />
+      }
+      <div>
+        <h2>{{ c.firstName }} {{ c.lastName }}</h2>
+        <p>Age: {{ c.age }}</p>
+        <p>
+          Team: <a [routerLink]="['/teams', c.teamId]">{{ c.teamName }}</a>
+        </p>
+        @if (c.history) {
+          <p>{{ c.history }}</p>
+        }
+      </div>
+    </div>
+
+    @if (authService.hasRole('Admin')) {
+      <div class="admin-actions">
+        <a [routerLink]="['/coaches', c.id, 'edit']">Edit</a>
+        <button (click)="onDelete()" [disabled]="deleting()" class="btn-delete">
+          {{ deleting() ? 'Deleting...' : 'Delete Coach' }}
+        </button>
+      </div>
+    }
+  }
+</div>

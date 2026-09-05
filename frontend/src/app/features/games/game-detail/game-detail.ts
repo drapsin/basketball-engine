@@ -4,6 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { GameService } from '../../../core/services/game.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { SimulationService } from '../../../core/services/simulation.service';
+import { ConfirmDialogService } from '../../../shared/confirm-dialog/confirm-dialog.service';
 import { GameDetail } from '../../../core/models/game.model';
 import { GameState } from '../../../core/models/stats.model';
 
@@ -19,6 +20,7 @@ export class GameDetailComponent implements OnInit {
   private router = inject(Router);
   private gameService = inject(GameService);
   private simulationService = inject(SimulationService);
+  private confirmDialog = inject(ConfirmDialogService);
   public authService = inject(AuthService);
 
   game = signal<GameDetail | null>(null);
@@ -73,39 +75,46 @@ export class GameDetailComponent implements OnInit {
 
     const g = this.game();
     const label = g ? `${g.awayTeamName} @ ${g.homeTeamName}` : 'this game';
-    const confirmed = window.confirm(`Delete ${label}? This cannot be undone.`);
-    if (!confirmed) return;
 
-    this.deleting.set(true);
-    this.gameService.delete(this.gameId).subscribe({
-      next: () => {
-        this.router.navigate(['/games']);
-      },
-      error: () => {
-        this.deleting.set(false);
-        this.error.set('Failed to delete game.');
-      },
-    });
+    this.confirmDialog
+      .confirm(`Delete ${label}? This cannot be undone.`, 'Delete Game')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
+
+        this.deleting.set(true);
+        this.gameService.delete(this.gameId!).subscribe({
+          next: () => {
+            this.router.navigate(['/games']);
+          },
+          error: () => {
+            this.deleting.set(false);
+            this.error.set('Failed to delete game.');
+          },
+        });
+      });
   }
 
   onSimulateInstant(): void {
     if (!this.gameId) return;
 
-    const confirmed = window.confirm('Instantly simulate this entire game? This cannot be undone.');
-    if (!confirmed) return;
+    this.confirmDialog
+      .confirm('Instantly simulate this entire game? This cannot be undone.', 'Simulate Instantly')
+      .subscribe((confirmed) => {
+        if (!confirmed) return;
 
-    this.simulateError.set(null);
-    this.simulating.set(true);
+        this.simulateError.set(null);
+        this.simulating.set(true);
 
-    this.simulationService.simulateInstant(this.gameId).subscribe({
-      next: () => {
-        this.simulating.set(false);
-        this.ngOnInit();
-      },
-      error: (err) => {
-        this.simulating.set(false);
-        this.simulateError.set(err.error?.message ?? 'Failed to simulate game.');
-      },
-    });
+        this.simulationService.simulateInstant(this.gameId!).subscribe({
+          next: () => {
+            this.simulating.set(false);
+            this.ngOnInit();
+          },
+          error: (err) => {
+            this.simulating.set(false);
+            this.simulateError.set(err.error?.message ?? 'Failed to simulate game.');
+          },
+        });
+      });
   }
 }
