@@ -6,6 +6,29 @@
     }
   </div>
 
+  <div class="filters">
+    <input
+      type="text"
+      placeholder="Search by name..."
+      [(ngModel)]="search"
+      (ngModelChange)="onSearchChange()"
+    />
+
+    <select [(ngModel)]="teamId" (ngModelChange)="onFilterChange()">
+      <option value="">All Teams</option>
+      @for (team of teams(); track team.id) {
+        <option [value]="team.id">{{ team.name }}</option>
+      }
+    </select>
+
+    <select [(ngModel)]="position" (ngModelChange)="onFilterChange()">
+      <option value="">All Positions</option>
+      @for (pos of positionOptions; track pos) {
+        <option [value]="pos">{{ pos }}</option>
+      }
+    </select>
+  </div>
+
   @if (loading()) {
     <p>Loading players...</p>
   }
@@ -57,6 +80,12 @@
           }
         </tbody>
       </table>
+
+      <div class="pagination">
+        <button [disabled]="page() === 1" (click)="goToPage(page() - 1)">Previous</button>
+        <span>Page {{ page() }} of {{ totalPages }} ({{ totalCount() }} players)</span>
+        <button [disabled]="page() === totalPages" (click)="goToPage(page() + 1)">Next</button>
+      </div>
     }
   }
 </div>

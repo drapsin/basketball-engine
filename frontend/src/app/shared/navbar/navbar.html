@@ -13,6 +13,9 @@
     <a routerLink="/live-games" routerLinkActive="active">Live Games</a>
 
     @if (authService.isLoggedIn()) {
+      @if (authService.hasRole('Admin')) {
+        <a routerLink="/admin/users" routerLinkActive="active">User Management</a>
+      }
       <span class="user-info"
         >{{ authService.currentAuth()?.email }} ({{ authService.currentRole() }})</span
       >

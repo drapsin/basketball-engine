@@ -1,0 +1,97 @@
+<h2>User Management</h2>
+
+@if (loading()) {
+  <p>Loading users...</p>
+} @else {
+  @if (errorMessage()) {
+    <p style="color: red">{{ errorMessage() }}</p>
+  }
+
+  <section>
+    <h3>Pending Requests ({{ pendingUsers().length }})</h3>
+
+    @if (pendingUsers().length === 0) {
+      <p>No pending requests.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of pendingUsers(); track user.id) {
+            <tr>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role }}</td>
+              <td>
+                <button [disabled]="actionInProgressId() === user.id" (click)="approve(user)">
+                  Approve
+                </button>
+                <button [disabled]="actionInProgressId() === user.id" (click)="reject(user)">
+                  Reject
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <section>
+    <h3>All Users ({{ allUsers().length }})</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of allUsers(); track user.id) {
+          <tr>
+            <td>{{ user.email }}</td>
+            <td>{{ user.role }}</td>
+            <td>{{ user.approvalStatus }}</td>
+            <td>
+              @if (user.isSeededAdmin) {
+                <span>(seeded admin — cannot delete)</span>
+              } @else {
+                <button [disabled]="actionInProgressId() === user.id" (click)="deleteUser(user)">
+                  Delete
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section>
+    <h3>Create Admin</h3>
+    <form [formGroup]="createAdminForm" (ngSubmit)="submitCreateAdmin()">
+      <div>
+        <label for="admin-email">Email</label>
+        <input id="admin-email" type="email" formControlName="email" />
+      </div>
+      <div>
+        <label for="admin-password">Password</label>
+        <input id="admin-password" type="password" formControlName="password" />
+      </div>
+      <button type="submit" [disabled]="createAdminSubmitting()">Create Admin</button>
+
+      @if (createAdminError()) {
+        <p style="color: red">{{ createAdminError() }}</p>
+      }
+      @if (createAdminSuccess()) {
+        <p style="color: green">{{ createAdminSuccess() }}</p>
+      }
+    </form>
+  </section>
+}

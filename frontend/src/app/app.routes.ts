@@ -22,6 +22,7 @@ import { LiveGame } from './features/live-game/live-game/live-game';
 import { LeadersList } from './features/leaders/leaders-list/leaders-list';
 import { StandingsList } from './features/standings/standings-list/standings-list';
 import { LiveGamesList } from './features/live-game/live-games-list/live-games-list';
+import { AdminUsers } from './features/admin/users/admin-users/admin-users';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -102,4 +103,5 @@ export const routes: Routes = [
   { path: 'leaders', component: LeadersList },
   { path: 'standings', component: StandingsList },
   { path: 'live-games', component: LiveGamesList },
+  { path: 'admin/users', component: AdminUsers },
 ];
