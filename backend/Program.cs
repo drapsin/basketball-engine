@@ -24,6 +24,7 @@ using nba_mvc.Services.Simulation;
 using nba_mvc.Services.Stats;
 using nba_mvc.Services.Team;
 using System.Text;
+using nba_mvc.Services.ExternalData;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,11 @@ builder.Services.AddSwaggerGen(options =>
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.ParameterLocation.Header,
         Description = "Enter your JWT token below (no need to type 'Bearer ' prefix)."
+    });
+
+    options.AddSecurityRequirement(document => new Microsoft.OpenApi.OpenApiSecurityRequirement
+    {
+        [new Microsoft.OpenApi.OpenApiSecuritySchemeReference("Bearer", document)] = new List<string>()
     });
 });
 
@@ -98,6 +104,7 @@ builder.Services.AddScoped<IActionEventService, ActionEventService>();
 builder.Services.AddScoped<IGameStatsService, GameStatsService>();
 builder.Services.AddScoped<IStandingsService, StandingsService>();
 builder.Services.AddScoped<IPlayerStatsService, PlayerStatsService>();
+builder.Services.AddHttpClient<INbaImportService, NbaImportService>();
 
 // SignalR
 builder.Services.AddSignalR()
