@@ -1,19 +1,59 @@
-.stats-table,
-.player-stats-table {
-  width: 100%;
-  max-width: 500px;
-  border-collapse: collapse;
-  margin-bottom: 1.5rem;
+.team-detail {
+  .header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
 
-  th,
-  td {
-    text-align: left;
-    padding: 0.4rem 0.6rem;
-    border-bottom: 1px solid #eee;
+    img {
+      width: 96px;
+      height: 96px;
+      object-fit: cover;
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    h2 {
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin: 0 0 2px;
+      font-size: 0.9rem;
+    }
   }
 
-  th {
-    color: #666;
-    font-size: 0.85rem;
+  .coach-section {
+    margin: 24px 0;
+
+    .coach-card {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+
+      img {
+        width: 64px;
+        height: 64px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      p {
+        margin: 0 0 2px;
+        color: var(--text-muted);
+        font-size: 0.88rem;
+      }
+    }
+  }
+
+  .stats-table,
+  .player-stats-table {
+    max-width: 560px;
+    margin-bottom: 24px;
   }
 }

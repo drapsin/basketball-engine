@@ -1,15 +1,12 @@
 .scoring-panel {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-top: 1.5rem;
-
-  .error {
-    color: #c0392b;
-  }
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-top: 24px;
+  background: var(--surface);
 
   .last-logged {
-    color: #27ae60;
+    color: var(--live);
     font-size: 0.85rem;
   }
 
@@ -33,82 +30,56 @@
     display: block;
     width: 100%;
     text-align: left;
-    padding: 0.4rem 0.6rem;
-    margin-bottom: 0.25rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background: white;
-    cursor: pointer;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-raised);
+    color: var(--text);
+    font-weight: 400;
 
     &.selected {
-      background: #1a1a2e;
-      color: white;
-      border-color: #1a1a2e;
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    &.on-court {
+      border-color: var(--live);
     }
   }
 
   .event-buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
+    gap: 8px;
 
     button {
-      padding: 0.4rem 0.8rem;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      background: #f5f5f5;
-      cursor: pointer;
+      background: var(--surface-raised);
+      color: var(--text);
+      border: 1px solid var(--border);
+      font-weight: 500;
+      padding: 7px 14px;
 
-      &:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
+      &:hover:not(:disabled) {
+        background: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
       }
     }
   }
 }
+
 .on-court-dot {
-  color: #2e7d32;
+  color: var(--live);
   margin-left: 6px;
   font-size: 10px;
 }
 
 .substitution-control {
-  margin: 12px 0;
+  margin: 14px 0;
 
   .btn-substitute {
-    padding: 8px 20px;
-    background: #1565c0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  }
-}
-.on-court-dot {
-  color: #2e7d32;
-  margin-left: 6px;
-  font-size: 10px;
-}
-
-.substitution-control {
-  margin: 12px 0;
-
-  .btn-substitute {
-    padding: 8px 20px;
-    background: #1565c0;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-
-    &:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    background: var(--accent);
   }
 }
